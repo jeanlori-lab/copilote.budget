@@ -244,6 +244,20 @@
     }
     .maps-link:hover { background: #bbdefb; }
   </style>
+  <!-- PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Carburant">
+  <meta name="theme-color" content="#1565c0">
+  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkNvw7t0IGNhcmJ1cmFudCB0cmFqZXQiLAogICJzaG9ydF9uYW1lIjogIkNhcmJ1cmFudCIsCiAgImRlc2NyaXB0aW9uIjogIkNhbGN1bGF0ZXVyIGRlIGNvw7t0IGNhcmJ1cmFudCBwb3VyIHVuIHRyYWpldCIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZThmNWU5IiwKICAidGhlbWVfY29sb3IiOiAiIzE1NjVjMCIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbCiAgICB7InNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBMU1USWdOVEV5SWo0OGNtVmpkQ0IzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSWdjbmc5SWpFeE5TSWdabWxzYkQwaUl6RTFOalZqTUNJdlBqeDBaWGgwSUhrOUlqTTBNQ0lnZUQwaU1qVTJJaUIwWlhoMExXRnVZMmh2Y2owaWJXbGtaR3hsSWlCbWIyNTBMWE5wZW1VOUlqTXdNQ0lnWm05dWRDMW1ZVzFwYkhrOUluTmxjbWxtSWo3aW03MDhMM1JsZUhRK1BDOXpkbWMrIiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn0KICBdCn0=">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzE1NjVjMCIvPjx0ZXh0IHk9IjM0MCIgeD0iMjU2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjMwMCIgZm9udC1mYW1pbHk9InNlcmlmIj7im708L3RleHQ+PC9zdmc+">
+  <script>
+    if ('serviceWorker' in navigator) {
+      const sw = `self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
+      const blob = new Blob([sw], {type: 'application/javascript'});
+      navigator.serviceWorker.register(URL.createObjectURL(blob));
+    }
+  </script>
 </head>
 <body>
 <div class="page">
