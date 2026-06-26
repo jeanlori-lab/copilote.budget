@@ -161,6 +161,17 @@
     }
     .conso-step:active { background: #dff6df; }
     .conso-wrap input { text-align: center; }
+    @media (pointer: coarse) {
+      .conso-step { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .param-label { width: 90px; font-size: 12px; }
+      .param-icon { width: 22px; font-size: 15px; }
+      input[type="text"], input[type="number"], select { font-size: 12px; padding: 7px 8px; }
+      .auto-field { font-size: 12px; padding: 7px 8px; }
+
+    }
 
     /* Bouton */
     .btn {
@@ -270,7 +281,7 @@
   <meta name="apple-mobile-web-app-title" content="Carburant">
   <meta name="theme-color" content="#1565c0">
   <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkNvw7t0IGNhcmJ1cmFudCB0cmFqZXQiLAogICJzaG9ydF9uYW1lIjogIkNhcmJ1cmFudCIsCiAgImRlc2NyaXB0aW9uIjogIkNhbGN1bGF0ZXVyIGRlIGNvw7t0IGNhcmJ1cmFudCBwb3VyIHVuIHRyYWpldCIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZThmNWU5IiwKICAidGhlbWVfY29sb3IiOiAiIzE1NjVjMCIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbCiAgICB7InNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBMU1USWdOVEV5SWo0OGNtVmpkQ0IzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSWdjbmc5SWpFeE5TSWdabWxzYkQwaUl6RTFOalZqTUNJdlBqeDBaWGgwSUhrOUlqTTBNQ0lnZUQwaU1qVTJJaUIwWlhoMExXRnVZMmh2Y2owaWJXbGtaR3hsSWlCbWIyNTBMWE5wZW1VOUlqTXdNQ0lnWm05dWRDMW1ZVzFwYkhrOUluTmxjbWxtSWo3aW03MDhMM1JsZUhRK1BDOXpkbWMrIiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn0KICBdCn0=">
-  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzE1NjVjMCIvPjx0ZXh0IHk9IjM0MCIgeD0iMjU2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjMwMCIgZm9udC1mYW1pbHk9InNlcmlmIj7im708L3RleHQ+PC9zdmc+">
+  <link rel="apple-touch-icon" href="logo budget trajet.png">
   <script>
     if ('serviceWorker' in navigator) {
       const sw = `self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
@@ -320,7 +331,7 @@
       </div>
     </div>
 
-    <div class="param-row">
+    <div class="param-row conso-row">
       <div class="param-icon">🚗</div>
       <div class="param-label">Conso au 100 km</div>
       <div class="param-input">
@@ -389,7 +400,7 @@
       </tbody>
     </table>
     <div class="maps-wrap">
-      <a class="maps-link" id="mapsLink" href="#" target="_blank">🗺 Voir l'itinéraire sur Maps</a>
+      <a class="maps-link" id="mapsLink" href="#" target="_blank"><img src="logo maps.png" alt="" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;"> Voir l'itinéraire sur Maps</a>
     </div>
   </div>
 
