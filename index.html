@@ -161,6 +161,10 @@
     }
     .conso-step:active { background: #dff6df; }
     .conso-wrap input { text-align: center; }
+    /* Cacher les flèches natives du champ number */
+    .conso-wrap input::-webkit-outer-spin-button,
+    .conso-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .conso-wrap input[type=number] { -moz-appearance: textfield; }
     @media (pointer: coarse) {
       .conso-step { display: none; }
     }
@@ -286,6 +290,26 @@
     .res-table thead th:nth-child(2) { color: #1976d2; }
     .res-table thead th:nth-child(3) { color: #2e7d32; }
 
+    /* Sous-blocs résultats */
+    .res-table tr.group-header td {
+      background: none;
+      border-radius: 0;
+      padding: 12px 4px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #90a4ae;
+      border-bottom: none;
+    }
+    .res-table tr.group-row td { border-radius: 0; }
+    .res-table tr.group-row td:first-child { border-radius: 0; }
+    .res-table tr.group-row td:nth-child(3) { border-radius: 0; }
+    .res-table tr.group-first td:first-child { border-radius: 10px 0 0 0; }
+    .res-table tr.group-first td:nth-child(3) { border-radius: 0 10px 0 0; }
+    .res-table tr.group-last td:first-child { border-radius: 0 0 0 10px; }
+    .res-table tr.group-last td:nth-child(3) { border-radius: 0 0 10px 0; }
+
     .maps-wrap {
       text-align: center;
       padding-top: 14px;
@@ -407,22 +431,28 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr class="group-header">
+          <td colspan="3">🗺 Trajet</td>
+        </tr>
+        <tr class="group-row group-first">
           <td>Distance</td>
           <td id="r-dist-a">—</td>
           <td id="r-dist-ar">—</td>
         </tr>
-        <tr>
+        <tr class="group-row group-last">
           <td>Durée</td>
           <td id="r-duree-a">—</td>
           <td id="r-duree-ar">—</td>
         </tr>
-        <tr>
-          <td>Coût carburant</td>
+        <tr class="group-header">
+          <td colspan="3">⛽ Carburant</td>
+        </tr>
+        <tr class="group-row group-first">
+          <td>Coût</td>
           <td id="r-cout-a">—</td>
           <td id="r-cout-ar">—</td>
         </tr>
-        <tr>
+        <tr class="group-row group-last">
           <td>Litres consommés</td>
           <td id="r-litres-a">—</td>
           <td id="r-litres-ar">—</td>
@@ -581,8 +611,8 @@ async function getRoute(c1, c2, apiKey) {
   if (!r.ok) {
     let msg = 'Erreur itinéraire (code ' + r.status + ')';
     if (r.status === 403) msg = 'Clé API invalide ou quota dépassé';
-    if (r.status === 404) msg = 'Itinéraire introuvable : essaie de préciser l\'adresse';
-    if (r.status === 400) msg = 'Itinéraire introuvable : essaie de préciser l\'adresse';
+    if (r.status === 404) msg = 'Itinéraire introuvable — essaie de préciser l\'adresse';
+    if (r.status === 400) msg = 'Adresse non reconnue — essaie d\'être plus précis (ex: "Houdan, Yvelines" ou "Paris 15")';
     throw new Error(msg);
   }
   const d = await r.json();
