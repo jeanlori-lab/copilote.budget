@@ -4,20 +4,10 @@
 <link rel="icon" type="image/png" href="logo budget trajet.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Copilote budget</title>
-  <!-- Aperçu lors du partage du lien (Open Graph + Twitter) -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Copilote budget">
-  <meta property="og:description" content="Calculateur de coût carburant pour un trajet : carburant, litres consommés, coût total, et la station la moins chère près du départ.">
-  <meta property="og:image" content="https://jeanlori-lab.github.io/budget-carburant-trajet/logo%20budget%20trajet.png">
-  <meta property="og:url" content="https://jeanlori-lab.github.io/budget-carburant-trajet/">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Copilote budget">
-  <meta name="twitter:description" content="Calculateur de coût carburant pour un trajet : carburant, litres consommés, coût total, et la station la moins chère près du départ.">
-  <meta name="twitter:image" content="https://jeanlori-lab.github.io/budget-carburant-trajet/logo%20budget%20trajet.png">
+  <title>Copilote budget 2</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -40,19 +30,20 @@
       margin-bottom: 20px;
     }
     .header h1 {
-      font-family: 'Fredoka', 'Segoe UI', sans-serif;
-      font-size: 30px;
-      font-weight: 600;
+      font-family: 'Patrick Hand', 'Fredoka', 'Segoe UI', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
       color: #1a2433;
-      letter-spacing: 0;
+      letter-spacing: 0.01em;
     }
     .header p {
-      font-size: 13px;
+      font-size: 14.5px;
       color: #607080;
-      margin-top: 5px;
+      margin-top: 12px;
       line-height: 1.5;
       padding: 0 12px;
     }
+    .header p .intro-bonus { display: inline-block; margin-top: 4px; }
 
     /* Carte */
     .card {
@@ -98,7 +89,10 @@
       position: relative;
     }
     .param-row:last-child { border-bottom: none; }
-    .point-row { border-bottom: none; }
+    .point-row { border-bottom: none; transition: margin-left 0.15s ease; }
+    /* Départ/Arrivée décalés légèrement dès qu'il y a une étape, pour laisser
+       un peu d'air aux poignées de glisser-déposer (sinon collées au bord). */
+    .point-row.shift-for-handles { margin-left: 8px; }
     /* Séparations plus marquées entre Carburant / Consommation / Passagers : plus
        d'espace vertical et un trait un peu plus visible et plus long. */
     .carburant-row, .conso-row, .passagers-row { padding: 15px 0; border-bottom-color: #cfd8e0; border-bottom-width: 1.5px; }
@@ -196,7 +190,7 @@
     }
 
     /* Règle + valeur sur une seule ligne (valeur à droite) */
-    .conso-line { display: flex; align-items: center; gap: 6px; justify-content: center; }
+    .conso-line { display: flex; align-items: center; gap: 6px; justify-content: space-between; width: 170px; margin: 0 auto; }
     .conso-line .conso-roulette { flex: 1; }
     .conso-value {
       flex-shrink: 0;
@@ -219,7 +213,7 @@
       font-family: inherit;
       font-size: 18px;
       font-weight: 600;
-      color: #1b5e20;
+      color: #455060;
       text-align: center;
       outline: none;
       box-shadow: none;
@@ -250,9 +244,10 @@
     .conso-arrow:hover, .pass-arrow:hover { background: #e3f5e4; }
     .conso-arrow:active, .pass-arrow:active { transform: scale(0.9); }
 
-    /* Nombre de passagers : compteur +/-, même style que la consommation. */
-    .passagers-line { display: flex; align-items: center; justify-content: center; gap: 12px; }
-    .passagers-value { font-size: 18px; font-weight: 600; color: #1b5e20; min-width: 1.5ch; text-align: center; }
+    /* Nombre de passagers : compteur +/-, aligné avec les boutons +/- de la
+       consommation juste au-dessus (même largeur de ligne, même position). */
+    .passagers-line { display: flex; align-items: center; justify-content: space-between; width: 170px; margin: 0 auto; }
+    .passagers-value { font-size: 18px; font-weight: 600; color: #455060; min-width: 1.5ch; text-align: center; }
 
     /* Règle / roulette de consommation (glisser horizontal, souris + doigt) */
     .conso-roulette {
@@ -350,6 +345,14 @@
       .conso-line .conso-roulette { display: block; }
       .conso-arrow { display: none; }
       .conso-value { width: 92px; }
+      /* L'alignement conso/passagers ne concerne que l'ordi (pas de règle sur mobile). */
+      .conso-line { justify-content: center; width: auto; margin: 0; }
+      .passagers-line { justify-content: center; width: auto; margin: 0; gap: 12px; }
+      /* Resserre les lignes de résultats (trop de blanc vertical sur petit écran). */
+      .res-table { border-spacing: 0 3px; }
+      .res-table tbody tr td { padding: 6px 10px; }
+      #r-cout.has-per-person { padding-bottom: 24px; }
+      .per-person-note { bottom: 3px; }
     }
 
     /* Autocomplete */
@@ -402,6 +405,7 @@
     /* Flèches d'inversion : à droite, chevauchent le coin des encadrés, discrètes */
     .swap-btn {
       position: absolute;
+      z-index: 25;
       right: -10px; /* centré sur le bord droit des encadrés (carré à cheval) */
       top: 50%;
       transform: translateY(-50%);
@@ -421,6 +425,27 @@
     }
     .swap-btn:hover { background: #eef4fb; color: #1976d2; border-color: #cfe0f3; box-shadow: 0 0 0 3px rgba(33,150,243,0.10); }
     .swap-btn:active { transform: translateY(-50%) scale(0.9); }
+    /* Info-bulle instantanée (pas d'attente contrairement au title natif du navigateur). */
+    .swap-btn::after {
+      content: attr(aria-label);
+      position: absolute;
+      bottom: calc(100% + 7px);
+      right: 0;
+      background: #1a2433;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 9px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.08s ease;
+      z-index: 1000;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .swap-btn:hover::after, .swap-btn:focus-visible::after { opacity: 1; }
+    }
     /* Effet sympa : survoler les flèches éclaire les deux encadrés */
     .points-wrap:has(.swap-btn:hover) .point-input {
       border-color: #93b8e6;
@@ -475,7 +500,7 @@
       border-radius: 8px;
       max-width: 220px;
       text-align: center;
-      z-index: 20;
+      z-index: 1001;
       opacity: 0;
       transform: translateY(-4px);
       transition: opacity 0.2s, transform 0.2s;
@@ -512,6 +537,23 @@
     }
     /* Les autres étapes glissent doucement à leur nouvelle place (animation FLIP) */
     .point-row.sliding { transition: transform 0.18s ease; }
+    /* Message qui suit le doigt/curseur quand une étape est glissée hors du bloc Paramètres. */
+    .drag-outside-msg {
+      position: fixed;
+      transform: translate(-50%, -100%);
+      background: #1a2433;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+      z-index: 999;
+    }
+    .drag-outside-msg.show { opacity: 1; }
 
     /* Bouton */
     .btn {
@@ -561,16 +603,43 @@
       border-collapse: separate;
       border-spacing: 0 6px;
     }
-    .res-table thead th {
-      font-size: 13px;
+
+    /* Bascule Aller simple / Aller-retour : remplace les deux colonnes du
+       tableau par une seule valeur, qu'on peut basculer d'un mode à
+       l'autre (seul le coût carburant garde un rappel de l'autre mode). */
+    .ar-toggle {
+      display: flex;
+      background: #eef2f6;
+      border-radius: 999px;
+      padding: 3px;
+      margin-bottom: 12px;
+    }
+    .ar-toggle-btn {
+      flex: 1;
+      text-align: center;
+      padding: 7px 0;
+      font-size: 12.5px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #90a4ae;
-      padding: 0 10px 4px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: #607080;
+      background: none;
+      border: none;
+      font-family: inherit;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+    .ar-toggle-btn.active {
+      background: #2196f3;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(33,150,243,0.35);
+    }
+    .cost-callout {
+      margin-top: 6px;
+      font-size: 11.5px;
+      color: #607080;
       text-align: center;
     }
-    .res-table thead th:first-child { text-align: left; }
+    .cost-callout strong { color: #1a2433; }
 
     .res-table tbody tr td {
       padding: 10px 12px;
@@ -586,44 +655,70 @@
       font-weight: 600;
       color: #1a2433;
     }
-    .res-table tbody tr td:nth-child(2) {
+    .res-table tbody tr td:last-child {
       background: #e8f4ff;
-    }
-    .res-table tbody tr td:nth-child(3) {
-      background: #e8f8ee;
       border-radius: 0 10px 10px 0;
     }
-    .res-table thead th:nth-child(2) { color: #1976d2; }
-    .res-table thead th:nth-child(3) { color: #2e7d32; }
-
-    /* Ligne total */
-    .total-row td { font-weight: 700 !important; font-size: 14px !important; }
-    .total-row td:nth-child(2) { background: #d0e8ff !important; color: #1565c0 !important; }
-    .total-row td:nth-child(3) { background: #c8f0d8 !important; color: #1b5e20 !important; }
-
-    /* Ligne Coût total isolée : bords arrondis (haut + bas) */
-    .total-standalone td:first-child { border-radius: 10px 0 0 10px; }
-    .total-standalone td:nth-child(3) { border-radius: 0 10px 10px 0; }
 
     /* Coût par personne (partage de frais) : sous-ligne discrète dans la même
-       cellule que le total, plutôt qu'une ligne séparée. */
-    .total-standalone td { position: relative; }
-    .total-standalone td.has-per-person { padding-bottom: 22px; }
+       cellule que le coût carburant, plutôt qu'une ligne séparée. */
+    #r-cout { position: relative; }
+    #r-cout.has-per-person { padding-bottom: 34px; }
     .per-person-note {
       position: absolute;
-      left: 0; right: 0;
-      bottom: 5px;
-      line-height: 1;
-      font-size: 10px;
+      left: 4px; right: 4px;
+      bottom: 4px;
+      line-height: 1.25;
+      font-size: 9.5px;
       font-weight: 600;
-      opacity: 0.75;
+      opacity: 0.8;
     }
 
-    /* Mini espace pour détacher la ligne « Coût total » du bloc Carburant */
-    .res-table tr.total-spacer td {
-      background: none;
-      padding: 0;
-      height: 6px;
+    /* Message rotatif quand on clique sur + alors qu'on est déjà au maximum de
+       passagers (même style que l'info-bulle des flèches d'inversion). */
+    .passagers-line { position: relative; }
+    .pass-max-msg {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: #1a2433;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.4;
+      padding: 7px 11px;
+      border-radius: 8px;
+      width: max-content;
+      max-width: 230px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 40;
+    }
+    .pass-max-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Message péage indisponible (occupe les 2 colonnes de la ligne Péages) */
+    .res-table td.peage-msg {
+      border-right: 1px solid #dbe3ec;
+      font-size: 12px;
+      font-weight: 600;
+      font-style: italic;
+      color: #1976d2;
+    }
+    /* Espace en bas de la cellule péage pour loger la note quota sans
+       décaler le prix (qui reste centré verticalement comme l'aller-retour). */
+    #r-peage-a, #r-peage-ar { position: relative; padding-bottom: 14px; }
+    /* Note discrète du quota TollGuru, juste sous le prix (centré) */
+    .quota-note {
+      position: absolute;
+      left: 0; right: 0;
+      top: calc(50% + 4px);
+      line-height: 1;
+      font-size: 9px;
+      font-weight: 400;
+      color: #aab4bf;
     }
 
     /* Sous-blocs résultats */
@@ -638,22 +733,21 @@
       color: #90a4ae;
       border-bottom: none;
     }
+    /* Rapproche le bandeau "Trajet" du haut du tableau. */
+    .res-table tbody tr.group-header:first-of-type td { padding-top: 0; }
     .res-table tr.group-row td { border-radius: 0; }
     .res-table tr.group-row td:first-child { border-radius: 0; }
-    .res-table tr.group-row td:nth-child(3) { border-radius: 0; }
+    .res-table tr.group-row td:last-child { border-radius: 0; }
     .res-table tr.group-first td:first-child { border-radius: 10px 0 0 0; }
-    .res-table tr.group-first td:nth-child(3) { border-radius: 0 10px 0 0; }
+    .res-table tr.group-first td:last-child { border-radius: 0 10px 0 0; }
     .res-table tr.group-last td:first-child { border-radius: 0 0 0 10px; }
-    .res-table tr.group-last td:nth-child(3) { border-radius: 0 0 10px 0; }
+    .res-table tr.group-last td:last-child { border-radius: 0 0 10px 0; }
 
     /* Contours subtils pour séparer visuellement les blocs Trajet et Coût & conso.
        Bordure continue autour de chaque ligne (pas de trait vertical interne). */
-    .res-table tr.group-row td,
-    .res-table tr.total-standalone td { border-top: 1px solid #dbe3ec; border-bottom: 1px solid #dbe3ec; }
-    .res-table tr.group-row td:first-child,
-    .res-table tr.total-standalone td:first-child { border-left: 1px solid #dbe3ec; }
-    .res-table tr.group-row td:nth-child(3),
-    .res-table tr.total-standalone td:nth-child(3) { border-right: 1px solid #dbe3ec; }
+    .res-table tr.group-row td { border-top: 1px solid #dbe3ec; border-bottom: 1px solid #dbe3ec; }
+    .res-table tr.group-row td:first-child { border-left: 1px solid #dbe3ec; }
+    .res-table tr.group-row td:last-child { border-right: 1px solid #dbe3ec; }
 
     .cheapest-note {
       text-align: left;
@@ -661,7 +755,7 @@
       border: 1px solid #eef2f6;
       border-radius: 14px;
       padding: 12px 14px;
-      margin-top: 16px;
+      margin-top: 22px;
     }
     .cheapest-header {
       display: flex;
@@ -733,8 +827,8 @@
 <div class="page">
 
   <div class="header">
-    <h1>Copilote budget</h1>
-    <p>Entrez les paramètres de votre trajet, on s'occupe des calculs : carburant, litres consommés, coût total. Et en bonus : on vous trouve la station la moins chère et la plus proche de votre départ !</p>
+    <h1>Copilote budget 2</h1>
+    <p>Entrez les paramètres de votre trajet, on s'occupe des calculs : coût du carburant et litres consommés. <br><span class="intro-bonus">⭐ En bonus : on vous trouve la station la moins chère et la plus proche de votre départ !</span></p>
   </div>
 
   <input type="hidden" id="apiKey" value="eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImY1NjRiM2M4Yjc0OTQ0ZDlhNmNjM2FiOWQzNjFhNTE2IiwiaCI6Im11cm11cjY0In0=">
@@ -749,7 +843,7 @@
       <div class="points-wrap">
         <div id="points"></div>
         <!-- Inverser départ ↔ destination (visible seulement sans étape) -->
-        <button type="button" class="swap-btn" id="swapBtn" onclick="swapItinerary()" title="Inverser départ et destination" aria-label="Inverser départ et destination">⇅</button>
+        <button type="button" class="swap-btn" id="swapBtn" onclick="swapItinerary()" aria-label="Inverser départ et destination">⇅</button>
       </div>
 
       <div class="itinerary-controls">
@@ -806,13 +900,6 @@
     </div>
   </div>
 
-  <!-- Astuce retour haptique iOS 17.4+ (switch natif caché) : l'élément garde sa
-       taille normale de rendu (pas de clip 1px, pas de display:none) et reste dans
-       le viewport, juste rendu quasi invisible par l'opacité et repoussé derrière
-       le contenu — pour que WebKit instancie réellement le contrôle natif. -->
-  <input type="checkbox" switch id="hapticSwitch" tabindex="-1" aria-hidden="true"
-    style="position:fixed; top:0; left:0; opacity:0.01; pointer-events:none; z-index:-1;">
-
   <button class="btn" id="calcBtn" onclick="calculer()">Calculer le coût du trajet</button>
   <div class="loader" id="loader">⏳ Calcul en cours…</div>
   <div class="error" id="error"></div>
@@ -820,50 +907,37 @@
   <!-- Résultats -->
   <div class="card resultats" id="sectionResultats" style="margin-top:14px;">
     <div class="card-title">Résultats</div>
+    <div class="ar-toggle" id="arToggle">
+      <button type="button" class="ar-toggle-btn" data-mode="simple" onclick="setResultMode('simple')">Aller simple</button>
+      <button type="button" class="ar-toggle-btn active" data-mode="ar" onclick="setResultMode('ar')">Aller-retour</button>
+    </div>
     <table class="res-table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Aller simple</th>
-          <th>Aller-retour</th>
-        </tr>
-      </thead>
       <tbody>
         <tr class="group-header">
-          <td colspan="3">Trajet</td>
+          <td colspan="2">Trajet</td>
         </tr>
         <tr class="group-row group-first">
           <td>Distance</td>
-          <td id="r-dist-a">—</td>
-          <td id="r-dist-ar">—</td>
+          <td id="r-dist">—</td>
         </tr>
         <tr class="group-row group-last">
           <td>Durée</td>
-          <td id="r-duree-a">—</td>
-          <td id="r-duree-ar">—</td>
+          <td id="r-duree">—</td>
         </tr>
         <tr class="group-header">
-          <td colspan="3">Coût & conso</td>
+          <td colspan="2">Coût & conso</td>
         </tr>
         <tr class="group-row group-first">
           <td>Coût carburant</td>
-          <td id="r-cout-a">—</td>
-          <td id="r-cout-ar">—</td>
+          <td id="r-cout">—</td>
         </tr>
         <tr class="group-row group-last">
           <td>Litres consommés</td>
-          <td id="r-litres-a">—</td>
-          <td id="r-litres-ar">—</td>
-        </tr>
-        <tr class="total-spacer"><td colspan="3"></td></tr>
-        <tr class="total-row total-standalone">
-          <td><strong>Coût total</strong></td>
-          <td id="r-total-a">—</td>
-          <td id="r-total-ar">—</td>
+          <td id="r-litres">—</td>
         </tr>
       </tbody>
     </table>
-    <div class="cheapest-note" id="cheapestNote" style="display:none;"></div>
+    <div class="cost-callout" id="costCallout"></div>
     <div class="maps-wrap" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
     <a class="maps-link" id="mapsLink" href="#" target="_blank"
        style="width:220px !important;height:38px;display:flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;">
@@ -876,6 +950,7 @@
         Voir le prix des péages
     </a>
 </div>
+    <div class="cheapest-note" id="cheapestNote" style="display:none;"></div>
   </div>
 
 </div>
@@ -904,6 +979,43 @@ const EUROPE_COUNTRIES = new Set([
 function isEurope(feature) {
   const cc = feature.properties && feature.properties.country_a;
   return EUROPE_COUNTRIES.has(cc);
+}
+
+// --- Autocomplétion (Photon/komoot) : mêmes idées que frenchFirst/isEurope
+// ci-dessus mais Photon utilise des codes pays ISO 3166-1 alpha-2 ("FR")
+// au lieu des codes alpha-3 ("FRA") renvoyés par ORS/Pelias pour le
+// géocodage final. On duplique donc la logique avec le bon format de code.
+const EUROPE_COUNTRIES_2 = new Set([
+  'AX','AL','AD','AT','BE','BG','BA','BY','CH','CY','CZ','DE','DK',
+  'ES','EE','FI','FR','FO','GB','GG','GI','GR','HR','HU','IM','IE',
+  'IS','IT','JE','LI','LT','LU','LV','MC','MD','MK','MT','ME','NL',
+  'NO','PL','PT','RO','SM','RS','SK','SI','SE','UA','VA','XK',
+]);
+function isEuropePhoton(feature) {
+  const cc = feature.properties && feature.properties.countrycode;
+  return EUROPE_COUNTRIES_2.has(cc);
+}
+function frenchFirstPhoton(features) {
+  return features.slice().sort((a, b) => {
+    const fa = (a.properties && a.properties.countrycode === 'FR') ? 0 : 1;
+    const fb = (b.properties && b.properties.countrycode === 'FR') ? 0 : 1;
+    return fa - fb;
+  });
+}
+// Construit un libellé lisible à partir des propriétés Photon (ville, code
+// postal, rue… selon ce qui est disponible), sur le même principe que le
+// libellé enrichi qu'ORS fournissait déjà tout formé dans "label".
+function photonLabel(p) {
+  const parts = [];
+  if (p.housenumber && p.street) parts.push(p.housenumber + ' ' + p.street);
+  else if (p.street) parts.push(p.street);
+  else if (p.name) parts.push(p.name);
+  const ville = p.city || p.district;
+  if (ville && !parts.includes(ville)) parts.push(ville);
+  const zone = p.state || p.county;
+  if (zone && zone !== ville && !parts.includes(zone)) parts.push(zone);
+  if (p.country && !parts.includes(p.country)) parts.push(p.country);
+  return parts.filter(Boolean).join(', ');
 }
 
 // --- Lieux favoris (départ/destination/étapes) : mémorisés dans le navigateur,
@@ -990,21 +1102,30 @@ async function onAutoComplete(input) {
   clearTimeout(autoTimers.get(input));
   if (val.length < 3) { list.style.display = 'none'; return; }
   autoTimers.set(input, setTimeout(async () => {
-    const apiKey = document.getElementById('apiKey').value.trim();
-    // Pas de « , France » forcé : on récupère large (villes + adresses) puis on
-    // remonte les résultats français en tête, sans exclure l'étranger.
+    // Photon (komoot) au lieu d'ORS pour la saisie live : moteur pensé pour
+    // l'autocomplétion, qui pondère fortement la notoriété (population,
+    // hiérarchie administrative) et remonte donc les villes connues avant
+    // les hameaux obscurs — contrairement à ORS/Pelias qui matchait parfois
+    // par simple proximité textuelle (ex. "anger" -> un hameau "Colère").
+    // Pas de « , France » forcé : on récupère large puis on remonte les
+    // résultats français en tête, sans exclure l'étranger (Berlin reste
+    // proposé en Allemagne, par exemple).
     const texteGeo = val;
     try {
-      const url = `https://api.openrouteservice.org/geocode/search?api_key=${apiKey}&text=${encodeURIComponent(texteGeo)}&size=10&focus.point.lon=2.3522&focus.point.lat=48.8566`;
+      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(texteGeo)}&limit=10&lang=fr&lat=48.8566&lon=2.3522`;
       const r = await fetch(url);
       if (!r.ok) { list.style.display = 'none'; return; }
       const d = await r.json();
       if (!d.features || d.features.length === 0) { list.style.display = 'none'; return; }
       list.innerHTML = '';
       const vus = new Set();
-      frenchFirst(d.features.filter(isEurope)).forEach(f => {
+      frenchFirstPhoton(d.features.filter(isEuropePhoton)).forEach(f => {
         if (list.children.length >= 6) return; // limite l'affichage
-        const label = f.properties.label;
+        // Libellé enrichi avec le département/la région : indispensable pour
+        // distinguer les homonymes (ex. Vanne en Haute-Saône vs Vannes dans le
+        // Morbihan), et le texte choisi désambiguïse aussi le géocodage final.
+        const label = photonLabel(f.properties);
+        if (!label) return;
         // Le géocodeur renvoie parfois plusieurs résultats au même libellé : on dédoublonne.
         const cle = label.trim().toLowerCase();
         if (vus.has(cle)) return;
@@ -1045,16 +1166,34 @@ function hideError() { document.getElementById('error').style.display='none'; }
 function setLoading(on) { document.getElementById('loader').style.display=on?'block':'none'; document.getElementById('calcBtn').disabled=on; }
 function resetResultat() { document.getElementById('sectionResultats').style.display='none'; hideError(); }
 
-// Petit retour haptique (mobile). Android : API Vibration. iOS 17.4+ : astuce
-// du switch caché (Safari ne supporte pas navigator.vibrate).
-let _lastHaptic = 0, _hapticSwitch = null;
+// Petit retour haptique (Android via l'API Vibration ; Safari iOS ne l'expose
+// pas, aucune astuce fiable n'existe côté web pour la remplacer).
+let _lastHaptic = 0;
 function hapticTick() {
+  if (typeof navigator === 'undefined' || !navigator.vibrate) return;
   const now = Date.now();
   if (now - _lastHaptic < 20) return; // throttle : évite la surchauffe en drag rapide
   _lastHaptic = now;
-  if (typeof navigator !== 'undefined' && navigator.vibrate) { navigator.vibrate(3); return; }
-  if (!_hapticSwitch) _hapticSwitch = document.getElementById('hapticSwitch');
-  if (_hapticSwitch) { try { _hapticSwitch.click(); } catch (e) {} }
+  navigator.vibrate(3);
+}
+
+// Rester appuyé sur un bouton +/- répète l'action en rafale (premier cran
+// immédiat, puis pause avant le défilement continu).
+function holdRepeat(el, action) {
+  if (!el) return;
+  let timeout = null, interval = null;
+  const stop = () => {
+    clearTimeout(timeout); clearInterval(interval);
+    timeout = null; interval = null;
+  };
+  el.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    action();
+    timeout = setTimeout(() => { interval = setInterval(action, 90); }, 400);
+  });
+  el.addEventListener('pointerup', stop);
+  el.addEventListener('pointerleave', stop);
+  el.addEventListener('pointercancel', stop);
 }
 
 // --- Roulette de consommation (1 à 30, pas de 0,1) ---
@@ -1116,11 +1255,11 @@ function consoInit() {
   window.addEventListener('resize', () => consoSet(consoValeur(), false));
   consoSet(consoValeur(), false);
 
-  // Flèches (desktop) : mêmes crans que le clavier.
+  // Flèches (desktop) : mêmes crans que le clavier. Rester appuyé défile en rafale.
   const minusBtn = document.getElementById('consoMinus');
   const plusBtn = document.getElementById('consoPlus');
-  if (minusBtn) minusBtn.addEventListener('click', () => consoSet(consoValeur() - 0.1, true));
-  if (plusBtn) plusBtn.addEventListener('click', () => consoSet(consoValeur() + 0.1, true));
+  holdRepeat(minusBtn, () => consoSet(consoValeur() - 0.1, true));
+  holdRepeat(plusBtn, () => consoSet(consoValeur() + 0.1, true));
 
   // Valeur éditable à la main, uniquement sur ordinateur (la règle pilote sur mobile).
   const valInput = document.getElementById('consoVal');
@@ -1140,9 +1279,12 @@ function consoInit() {
 }
 consoInit();
 
-// --- Nombre de passagers (partage de frais, 1 à 20) ---
-const PASS_MIN = 1, PASS_MAX = 20;
-function passagersValeur() { return parseInt(document.getElementById('passagers').value, 10) || 1; }
+// --- Nombre de passagers (partage de frais, 0 à 9) ---
+const PASS_MIN = 0, PASS_MAX = 9;
+function passagersValeur() {
+  const v = parseInt(document.getElementById('passagers').value, 10);
+  return isNaN(v) ? 1 : v;
+}
 function passagersSet(v) {
   v = Math.min(PASS_MAX, Math.max(PASS_MIN, Math.round(v)));
   document.getElementById('passagers').value = v;
@@ -1150,11 +1292,60 @@ function passagersSet(v) {
   if (disp) disp.textContent = v;
   resetResultat();
 }
+// Messages rotatifs quand on clique sur + alors qu'on est déjà au maximum.
+const PASS_MAX_MESSAGES = [
+  "Alors, plus de 9 en voiture ça va être compliqué…",
+  "Pour un conducteur de métro bien sûr y'a pas de sujets",
+  "Ou à la limite si tu es le capitaine d'un canoë de sauvetage de migrants…",
+  "Mais en voiture, y'a pas moyen",
+];
+let passMaxMsgIndex = 0;
+let passMaxMsgTimer = null;
+function showPassMaxMessage() {
+  const plusBtn = document.getElementById('passPlus');
+  if (!plusBtn || !plusBtn.parentElement) return;
+  let bubble = document.getElementById('passMaxMsg');
+  if (!bubble) {
+    bubble = document.createElement('div');
+    bubble.id = 'passMaxMsg';
+    bubble.className = 'pass-max-msg';
+    plusBtn.parentElement.appendChild(bubble);
+  }
+  bubble.textContent = PASS_MAX_MESSAGES[passMaxMsgIndex % PASS_MAX_MESSAGES.length];
+  passMaxMsgIndex++;
+  bubble.classList.add('show');
+  clearTimeout(passMaxMsgTimer);
+  passMaxMsgTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+}
+// Message quand on clique sur - alors qu'on est déjà à 0.
+const PASS_MIN_MESSAGE = "Ta voiture voyage seule ?";
+let passMinMsgTimer = null;
+function showPassMinMessage() {
+  const minusBtn = document.getElementById('passMinus');
+  if (!minusBtn || !minusBtn.parentElement) return;
+  let bubble = document.getElementById('passMinMsg');
+  if (!bubble) {
+    bubble = document.createElement('div');
+    bubble.id = 'passMinMsg';
+    bubble.className = 'pass-max-msg';
+    minusBtn.parentElement.appendChild(bubble);
+  }
+  bubble.textContent = PASS_MIN_MESSAGE;
+  bubble.classList.add('show');
+  clearTimeout(passMinMsgTimer);
+  passMinMsgTimer = setTimeout(() => bubble.classList.remove('show'), 2600);
+}
 function passagersInit() {
   const minusBtn = document.getElementById('passMinus');
   const plusBtn = document.getElementById('passPlus');
-  if (minusBtn) minusBtn.addEventListener('click', () => passagersSet(passagersValeur() - 1));
-  if (plusBtn) plusBtn.addEventListener('click', () => passagersSet(passagersValeur() + 1));
+  holdRepeat(minusBtn, () => {
+    if (passagersValeur() === PASS_MIN + 1) showPassMinMessage();
+    passagersSet(passagersValeur() - 1);
+  });
+  holdRepeat(plusBtn, () => {
+    if (passagersValeur() >= PASS_MAX) { showPassMaxMessage(); return; }
+    passagersSet(passagersValeur() + 1);
+  });
 }
 passagersInit();
 
@@ -1271,15 +1462,18 @@ function refreshPoints() {
       label.textContent = 'Départ';
       input.placeholder = 'Adresse de départ'; rm.style.display = 'none';
       row.classList.remove('is-stop');
+      row.classList.toggle('shift-for-handles', showHandles);
     } else if (i === rows.length - 1) {
       label.textContent = 'Arrivée';
       input.placeholder = 'Lieu de vacances'; rm.style.display = 'none';
       row.classList.remove('is-stop');
+      row.classList.toggle('shift-for-handles', showHandles);
     } else {
       // Étape : le numéro passe en placeholder dans l'encadré, ✕ à droite.
       label.textContent = '';
       input.placeholder = 'Étape ' + i; rm.style.display = '';
       row.classList.add('is-stop');
+      row.classList.toggle('shift-for-handles', showHandles);
     }
   });
   // Les flèches d'inversion n'ont de sens que sans étape (départ + destination).
@@ -1308,7 +1502,14 @@ function removePoint(btn) {
 
 function onPointInput(el) {
   resetResultat();
-  if (el) { onAutoComplete(el); syncStarForInput(el); }
+  if (el) {
+    // Champ vidé (efface tout le texte) : montre directement les favoris,
+    // sans attendre que l'utilisateur sorte du champ et reclique dedans.
+    // (onAutoComplete masquerait sinon la liste pour un texte trop court.)
+    if (el.value.trim().length === 0) showFavoritesIfEmpty(el);
+    else onAutoComplete(el);
+    syncStarForInput(el);
+  }
 }
 
 // Échange départ ↔ destination (disponible uniquement sans étape).
@@ -1367,11 +1568,44 @@ function onDragMove(e) {
   const rect = dragRow.getBoundingClientRect();
   const dy = (e.clientY - dragGrabOffset) - (rect.top + rect.height / 2);
   dragRow.style.transform = `translateY(${dy}px) scale(1.02)`;
+  // On ne bloque pas le glisser hors du bloc Départ/Étapes/Arrivée (on peut
+  // descendre jusqu'en bas de la page), mais on prévient avec un message qui
+  // suit le curseur. Bloc = l'encadré visuel (.section), pas toute la carte
+  // Paramètres (qui inclut aussi Carburant/Consommation/Passagers en dessous
+  // et dépasse souvent la hauteur d'écran, ce qui rendrait le seuil inatteignable).
+  const card = dragRow.closest('.section');
+  if (card) {
+    const cardRect = card.getBoundingClientRect();
+    const outside = (rect.bottom + dy) < cardRect.top || (rect.top + dy) > cardRect.bottom;
+    const msg = ensureDragOutsideMsg();
+    if (outside) {
+      // Centré horizontalement (pas sur le curseur) : sur mobile, suivre le
+      // doigt peut coller le message contre le bord de l'écran et le tronquer.
+      msg.style.left = '50%';
+      msg.style.top = (e.clientY - 34) + 'px';
+      msg.classList.add('show');
+    } else {
+      msg.classList.remove('show');
+    }
+  }
+}
+function ensureDragOutsideMsg() {
+  let el = document.getElementById('dragOutsideMsg');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'dragOutsideMsg';
+    el.className = 'drag-outside-msg';
+    el.textContent = 'Non mais tu vas où comme ça ?';
+    document.body.appendChild(el);
+  }
+  return el;
 }
 function endDrag() {
   const dr = dragRow;
   dragRow = null;
   document.removeEventListener('pointermove', onDragMove);
+  const outMsg = document.getElementById('dragOutsideMsg');
+  if (outMsg) outMsg.classList.remove('show');
   // La ligne se replace en douceur à son emplacement final.
   if (dr) {
     dr.style.transition = 'transform 0.15s ease';
@@ -1457,10 +1691,155 @@ async function getRoute(coords, apiKey) {
   return { distanceKm: s.distance / 1000, dureeSec: s.duration, polyline };
 }
 
+// URL du relais Cloudflare Worker qui appelle TollGuru (contourne le blocage CORS).
+// ⚠️ Colle ici l'URL de TON Worker, ex : https://peage.toncompte.workers.dev
+const TOLL_PROXY_URL = 'https://peage.jeanlorilleux37.workers.dev/';
+
+// Cache des péages (localStorage) : un trajet déjà calculé ne reconsomme pas
+// le quota TollGuru (plan gratuit = 15 calculs/jour).
+function tollCacheKey(c1, c2) {
+  const r = n => n.toFixed(4); // ~11 m de précision, suffisant pour identifier un trajet
+  return 'toll:' + r(c1[1]) + ',' + r(c1[0]) + '>' + r(c2[1]) + ',' + r(c2[0]);
+}
+function tollCacheGet(key) {
+  try { const v = localStorage.getItem(key); return v === null ? undefined : JSON.parse(v); }
+  catch(e) { return undefined; }
+}
+function tollCacheSet(key, cost) {
+  try { localStorage.setItem(key, JSON.stringify(cost)); } catch(e) {}
+}
+
+// Suivi du quota TollGuru (15 requêtes / 24 h glissantes), estimé côté navigateur :
+// on horodate chaque appel réellement consommé (ni cache, ni refus quota).
+const TOLL_QUOTA_MAX = 15;
+const TOLL_QUOTA_WINDOW = 24 * 3600 * 1000;
+function tollQuotaCalls() {
+  let arr;
+  try { arr = JSON.parse(localStorage.getItem('tollQuotaCalls') || '[]'); } catch(e) { arr = []; }
+  const cutoff = Date.now() - TOLL_QUOTA_WINDOW;
+  arr = arr.filter(t => t > cutoff);
+  try { localStorage.setItem('tollQuotaCalls', JSON.stringify(arr)); } catch(e) {}
+  return arr;
+}
+function tollQuotaRemaining() {
+  return Math.max(0, TOLL_QUOTA_MAX - tollQuotaCalls().length);
+}
+function recordTollCall() {
+  const arr = tollQuotaCalls();
+  arr.push(Date.now());
+  try { localStorage.setItem('tollQuotaCalls', JSON.stringify(arr)); } catch(e) {}
+}
+
+async function getTolls(geometry, c1, c2) {
+  // ORS renvoie une polyline encodée (précision 5, compatible Google).
+  const polyline = (typeof geometry === 'string') ? geometry : null;
+  if (!polyline) return null;
+  if (!TOLL_PROXY_URL) return null;
+
+  // 1) Cache : si ce trajet a déjà été calculé, on réutilise (économise le quota).
+  const cacheKey = (c1 && c2) ? tollCacheKey(c1, c2) : null;
+  if (cacheKey) {
+    const cached = tollCacheGet(cacheKey);
+    if (typeof cached === 'number') return cached;
+  }
+
+  try {
+    // c1/c2 sont des coordonnées [lng, lat] (format ORS/GeoJSON).
+    const from = c1 ? { lat: c1[1], lng: c1[0] } : null;
+    const to   = c2 ? { lat: c2[1], lng: c2[0] } : null;
+    const r = await fetch(TOLL_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ polyline: polyline, from: from, to: to, vehicleType: '2AxlesAuto' })
+    });
+    const d = await r.json();
+    // Le Worker renvoie un coût normalisé { cost: <nombre|null> }.
+    let cost = null;
+    if (typeof d.cost === 'number') {
+      cost = d.cost;
+    } else if (d.cost === undefined) {
+      // Compat : ancienne forme (réponse brute TollGuru).
+      if (d.route && d.route.hasTolls === false) cost = 0;
+      else {
+        const costs = (d.route && d.route.costs)
+          || (d.routes && d.routes[0] && d.routes[0].costs)
+          || d.costs;
+        cost = extractToll(costs);
+      }
+    }
+    // On ne met en cache qu'un coût valide (jamais un échec/N/A).
+    if (cacheKey && typeof cost === 'number') tollCacheSet(cacheKey, cost);
+    // Un coût obtenu par appel réseau = 1 transaction TollGuru consommée.
+    if (typeof cost === 'number') recordTollCall();
+    return cost;
+  } catch(e) {
+    return null;
+  }
+}
+
+function extractToll(costs) {
+  if (!costs || typeof costs !== 'object') return null;
+  // On parcourt les champs de coût possibles, du plus pertinent au plus générique.
+  const candidats = [
+    costs.tag, costs.cash, costs.creditCard, costs.licensePlate,
+    costs.minimumTollCost, costs.maximumTollCost, costs.prepaidCard, costs.EUR
+  ];
+  for (const c of candidats) {
+    const n = parseFloat(c);
+    if (c !== undefined && c !== null && !isNaN(n)) return n;
+  }
+  return null;
+}
+
 function formatDuree(sec) {
   const h = Math.floor(sec / 3600);
   const m = Math.round((sec % 3600) / 60);
   return h > 0 ? `${h}h${String(m).padStart(2,'0')}` : `${m} min`;
+}
+
+function fmtKm(n)  { return Math.round(n).toLocaleString('fr-FR') + ' km'; }
+function fmtEur(n) { return n.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €'; }
+function fmtL(n)   { return n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' L'; }
+
+// --- Bascule Aller simple / Aller-retour dans le tableau de résultats ---
+let resultMode = 'ar'; // 'simple' | 'ar'
+let lastResultData = null;
+
+function setResultMode(mode) {
+  resultMode = mode;
+  document.querySelectorAll('.ar-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  if (lastResultData) renderResultMode();
+}
+
+function renderResultMode() {
+  const d = lastResultData;
+  const isAR = resultMode === 'ar';
+  document.getElementById('r-dist').textContent   = fmtKm(isAR ? d.distA * 2 : d.distA);
+  document.getElementById('r-duree').textContent  = formatDuree(isAR ? d.dureeSec * 2 : d.dureeSec);
+  document.getElementById('r-litres').textContent = fmtL(isAR ? d.litresA * 2 : d.litresA);
+
+  // Coût carburant : seule valeur qui garde un rappel de l'autre mode
+  // (c'est la donnée jugée pertinente à comparer aller vs aller-retour).
+  const coutAffiche = isAR ? d.coutA * 2 : d.coutA;
+  const rCout = document.getElementById('r-cout');
+  rCout.textContent = fmtEur(coutAffiche);
+  rCout.classList.toggle('has-per-person', d.passagers === 0 || d.passagers > 1);
+  if (d.passagers === 0) {
+    const note = document.createElement('div');
+    note.className = 'per-person-note';
+    note.textContent = '0 € / pers., la voiture voyage seule 🥲';
+    rCout.appendChild(note);
+  } else if (d.passagers > 1) {
+    const note = document.createElement('div');
+    note.className = 'per-person-note';
+    note.textContent = fmtEur(coutAffiche / d.passagers) + ' / pers.';
+    rCout.appendChild(note);
+  }
+
+  const callout = document.getElementById('costCallout');
+  callout.innerHTML = isAR
+    ? 'Aller simple : <strong>' + fmtEur(d.coutA) + '</strong> · ' + fmtL(d.litresA)
+    : 'Aller-retour : <strong>' + fmtEur(d.coutA * 2) + '</strong> · ' + fmtL(d.litresA * 2);
 }
 
 async function calculer() {
@@ -1489,42 +1868,10 @@ async function calculer() {
     const distA   = route.distanceKm;
     const litresA = (distA * conso) / 100;
     const coutA   = litresA * prixActuel;
-    const fmtEuro = n => n.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
-
-    // Le total ne compte que le carburant (le calcul du coût des péages a été retiré).
-    const totalAFinal  = coutA;
-    const totalARFinal = coutA * 2;
-    const rTotalA  = document.getElementById('r-total-a');
-    const rTotalAR = document.getElementById('r-total-ar');
-    rTotalA.textContent  = fmtEuro(totalAFinal);
-    rTotalAR.textContent = fmtEuro(totalARFinal);
-
-    // Partage de frais entre passagers : sous-ligne discrète dans la cellule du total.
     const passagers = passagersValeur();
-    rTotalA.classList.toggle('has-per-person', passagers > 1);
-    rTotalAR.classList.toggle('has-per-person', passagers > 1);
-    if (passagers > 1) {
-      const noteA = document.createElement('div');
-      noteA.className = 'per-person-note';
-      noteA.textContent = fmtEuro(totalAFinal / passagers) + ' / pers.';
-      rTotalA.appendChild(noteA);
-      const noteAR = document.createElement('div');
-      noteAR.className = 'per-person-note';
-      noteAR.textContent = fmtEuro(totalARFinal / passagers) + ' / pers.';
-      rTotalAR.appendChild(noteAR);
-    }
 
-    const fmtKm = n => Math.round(n).toLocaleString('fr-FR') + ' km';
-    document.getElementById('r-dist-a').textContent    = fmtKm(distA);
-    document.getElementById('r-dist-ar').textContent   = fmtKm(distA * 2);
-    document.getElementById('r-duree-a').textContent   = formatDuree(route.dureeSec);
-    document.getElementById('r-duree-ar').textContent  = formatDuree(route.dureeSec * 2);
-    const fmtEur = n => n.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
-    document.getElementById('r-cout-a').textContent    = fmtEur(coutA);
-    document.getElementById('r-cout-ar').textContent   = fmtEur(coutA * 2);
-    const fmtL = n => n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' L';
-    document.getElementById('r-litres-a').textContent  = fmtL(litresA);
-    document.getElementById('r-litres-ar').textContent = fmtL(litresA * 2);
+    lastResultData = { distA, dureeSec: route.dureeSec, litresA, coutA, passagers };
+    renderResultMode();
 
     // Itinéraire Maps : force le mode voiture (travelmode=driving) + étapes.
     const origin = encodeURIComponent(lieux[0]);
@@ -1585,7 +1932,7 @@ cheapestNote.appendChild(header);
         link.className = 'cheapest-link';
         link.href = `https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${station.lat},${station.lon}`;
         link.target = '_blank';
-        link.textContent = 'Itinéraire vers cette station →';
+        link.textContent = 'Aller à cette station →';
         cheapestNote.appendChild(link);
       }
 
@@ -1607,5 +1954,4 @@ document.addEventListener('keydown', e => { if (e.key === 'Enter') calculer(); }
 </script>
 </body>
 </html>
-
 
