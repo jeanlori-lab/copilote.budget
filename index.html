@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<link rel="icon" type="image/png" href="logo budget trajet.png">
+<link rel="icon" type="image/png" href="logo trajet rat.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Copilote budget</title>
+  <title>Tratjet</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+      background: #eef2f6;
       min-height: 100vh;
       padding: 24px 16px;
       color: #1a2433;
@@ -30,11 +30,20 @@
       margin-bottom: 20px;
     }
     .header h1 {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Sora', 'Segoe UI', Arial, sans-serif;
       font-size: 34px;
       font-weight: 700;
-      color: #1a2433;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.02em;
+      display: inline-block;
+      transform: scaleY(1.12);
+      background: linear-gradient(135deg, #0f1729, #29405e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .header h1 .rat-emphasis {
+      color: #e2971a;
+      font-weight: 800;
     }
     .header p {
       font-size: 14.5px;
@@ -44,6 +53,7 @@
       padding: 0 12px;
     }
     .header p .intro-bonus { display: inline-block; margin-top: 4px; }
+    .header p .intro-bonus-label { color: #e2971a; font-weight: 800; }
 
     /* Carte */
     .card {
@@ -51,7 +61,7 @@
       border-radius: 18px;
       padding: 20px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      box-shadow: 0 6px 22px rgba(15,23,41,0.14);
     }
 
     .card-title {
@@ -125,26 +135,36 @@
     input[type="text"], input[type="number"], select {
       width: 100%;
       padding: 8px 11px;
-      border: 1.5px solid #c8e6c9;
+      border: 2.5px solid #1976d2;
       border-radius: 10px;
-      background: #f1fdf1;
+      background: #ffffff;
       font-size: 13px;
+      font-weight: 600;
       font-family: inherit;
-      color: #1a2433;
+      color: #0f1729;
       outline: none;
+      box-shadow: 0 2px 6px rgba(25,118,210,0.15);
       transition: border-color 0.15s, box-shadow 0.15s;
     }
     input[type="text"]:focus, input[type="number"]:focus, select:focus {
-      border-color: #43a047;
-      box-shadow: 0 0 0 3px rgba(67,160,71,0.13);
+      border-color: #0d47a1;
+      box-shadow: 0 0 0 3px rgba(25,118,210,0.2);
     }
     select {
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2390a4ae'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23607080'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 10px center;
       padding-right: 26px;
-      background-color: #f1fdf1;
+      background-color: #ffffff;
+    }
+    .section-carburant input[type="text"], .section-carburant input[type="number"], .section-carburant select {
+      border-color: #e2971a;
+      box-shadow: 0 2px 6px rgba(226,151,26,0.18);
+    }
+    .section-carburant input[type="text"]:focus, .section-carburant input[type="number"]:focus, .section-carburant select:focus {
+      border-color: #c9760a;
+      box-shadow: 0 0 0 3px rgba(226,151,26,0.22);
     }
 
     .auto-field {
@@ -174,11 +194,15 @@
     /* Trait séparateur entre le bloc Départ/Destination (au-dessus) et Carburant/Conso */
     /* Panneaux teintés : un pour Départ/Destination, un pour Carburant/Conso */
     .section {
-      background: #f5f8fb;
-      border: 1px solid #eef2f6;
+      background: #eaf3ff;
+      border: 1.5px solid #bcd9f7;
       border-radius: 14px;
       padding: 4px 14px;
       margin-bottom: 12px;
+    }
+    .section-carburant {
+      background: #fff6e6;
+      border-color: #f3d999;
     }
     .carburant-row { padding-bottom: 26px; }
     .carburant-row .param-input { position: relative; }
@@ -220,7 +244,7 @@
       cursor: text;
     }
     #consoVal.conso-val-input:focus {
-      background: rgba(46,125,50,0.06);
+      background: rgba(226,151,26,0.1);
       box-shadow: none;
     }
     #consoVal.conso-val-input[readonly] { cursor: default; }
@@ -229,11 +253,11 @@
     .conso-arrow, .pass-arrow {
       width: 32px; height: 32px;
       flex-shrink: 0;
-      border: 1.5px solid #c8e6c9;
+      border: 2.5px solid #e2971a;
       border-radius: 10px;
-      background: linear-gradient(#fbfffb, #eef9ee);
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-      color: #2e7d32;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(226,151,26,0.18);
+      color: #c9760a;
       font-size: 17px;
       font-weight: 700;
       line-height: 1;
@@ -241,7 +265,7 @@
       display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, transform 0.1s;
     }
-    .conso-arrow:hover, .pass-arrow:hover { background: #e3f5e4; }
+    .conso-arrow:hover, .pass-arrow:hover { background: #fff1d6; }
     .conso-arrow:active, .pass-arrow:active { transform: scale(0.9); }
 
     /* Nombre de passagers : compteur +/-, aligné avec les boutons +/- de la
@@ -254,10 +278,10 @@
       position: relative;
       width: 100%;
       height: 32px;
-      border: 1.5px solid #c8e6c9;
+      border: 2.5px solid #e2971a;
       border-radius: 10px;
-      background: linear-gradient(#fbfffb, #eef9ee);
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(226,151,26,0.18);
       overflow: hidden;
       cursor: grab;
       touch-action: none;
@@ -279,7 +303,7 @@
       top: 0; left: 0; height: 100%;
       width: 4000px;
       /* graduations fines tous les 0,1 (6px) */
-      background-image: repeating-linear-gradient(90deg, #bcdcc0 0, #bcdcc0 1px, transparent 1px, transparent 6px);
+      background-image: repeating-linear-gradient(90deg, #f0cf8a 0, #f0cf8a 1px, transparent 1px, transparent 6px);
       background-repeat: repeat-x;
       background-position: 0 100%;
       background-size: 6px 7px;
@@ -294,21 +318,22 @@
       position: absolute;
       left: 0; bottom: 0;
       width: 1.5px; height: 11px;
-      background: #7fae84;
+      background: #c9760a;
       transform: translateX(-50%);
     }
     .rt-major span {
       position: absolute;
-      bottom: 12px; left: 0;
+      bottom: 11px; left: 0;
       transform: translateX(-50%);
-      font-size: 9px;
-      color: #6f8a72;
+      font-size: 12px;
+      font-weight: 700;
+      color: #8a6417;
     }
     .roulette-center {
       position: absolute;
       left: 50%; top: 0; bottom: 0;
       width: 2px;
-      background: #2e7d32;
+      background: #c9760a;
       transform: translateX(-50%);
       pointer-events: none;
       z-index: 2;
@@ -320,8 +345,8 @@
       border-left: 4px solid transparent;
       border-right: 4px solid transparent;
     }
-    .roulette-center::before { top: -1px; border-top: 5px solid #2e7d32; }
-    .roulette-center::after { bottom: -1px; border-bottom: 5px solid #2e7d32; }
+    .roulette-center::before { top: -1px; border-top: 5px solid #c9760a; }
+    .roulette-center::after { bottom: -1px; border-bottom: 5px solid #c9760a; }
     @media (max-width: 768px) {
       input[type="text"], input[type="number"], select { font-size: 16px; }
     }
@@ -349,10 +374,7 @@
       .conso-line { justify-content: center; width: auto; margin: 0; }
       .passagers-line { justify-content: center; width: auto; margin: 0; gap: 12px; }
       /* Resserre les lignes de résultats (trop de blanc vertical sur petit écran). */
-      .res-table { border-spacing: 0 3px; }
-      .res-table tbody tr td { padding: 6px 10px; }
-      #r-cout.has-per-person { padding-bottom: 24px; }
-      .per-person-note { bottom: 3px; }
+      .res-row { padding: 6px 0; }
     }
 
     /* Autocomplete */
@@ -362,7 +384,7 @@
       top: calc(100% + 4px);
       left: 0; right: 0;
       background: #fff;
-      border: 1.5px solid #c8e6c9;
+      border: 1.5px solid #1976d2;
       border-radius: 12px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.12);
       z-index: 999;
@@ -380,7 +402,7 @@
       gap: 8px;
     }
     .autocomplete-item:last-child { border-bottom: none; }
-    .autocomplete-item:hover { background: #f1fdf1; }
+    .autocomplete-item:hover { background: #eaf3ff; }
 
     /* Étapes / inversion */
     .itinerary-controls {
@@ -559,7 +581,7 @@
     .btn {
       width: 100%;
       padding: 13px;
-      background: linear-gradient(135deg, #2196f3, #1565c0);
+      background: linear-gradient(135deg, #2196f3, #0d47a1);
       color: #fff;
       font-size: 14px;
       font-weight: 700;
@@ -567,7 +589,7 @@
       border-radius: 14px;
       cursor: pointer;
       letter-spacing: 0.02em;
-      box-shadow: 0 4px 14px rgba(33,150,243,0.35);
+      box-shadow: 0 6px 18px rgba(13,71,161,0.4);
       transition: opacity 0.15s, transform 0.1s;
     }
     .btn:hover { opacity: 0.92; }
@@ -598,11 +620,47 @@
     /* Résultats */
     .card.resultats { display: none; }
 
-    .res-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 6px;
+    /* Sous-blocs résultats (Trajet / Coût & conso) : réutilise la charte
+       graphique de la page Paramètres (.section, .param-row) plutôt qu'un
+       tableau à part, pour que les deux pages restent visuellement proches. */
+    .res-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #90a4ae;
+      padding: 0 2px 6px;
     }
+    .res-section-title:not(:first-child) { padding-top: 6px; }
+    .res-section { margin-bottom: 6px; }
+    .res-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f4f8;
+      position: relative;
+    }
+    .res-row:last-child { border-bottom: none; }
+    .res-label { font-size: 14px; font-weight: 600; color: #455060; }
+    .res-value { font-size: 14.5px; font-weight: 700; color: #1a2433; text-align: right; }
+
+    /* Trajet : simple ligne de texte compacte (distance/durée), sans carte
+       ni bordures — l'info est secondaire par rapport au coût. */
+    .res-trajet-line {
+      font-size: 15px;
+      font-weight: 400;
+      color: #607080;
+      text-align: center;
+      padding: 2px 2px 14px;
+    }
+    .res-trajet-line strong { font-weight: 600; color: #455060; }
+
+    /* Coût & conso : les chiffres qui comptent vraiment, mis en avant en
+       grand et en gras pour qu'on les repère au premier coup d'œil. */
+    .res-value-big { font-size: 29px; font-weight: 900; color: #1565c0; }
+    #r-litres.res-value-big { font-size: 22px; color: #1a2433; }
 
     /* Bascule Aller simple / Aller-retour : remplace les deux colonnes du
        tableau par une seule valeur, qu'on peut basculer d'un mode à
@@ -633,45 +691,50 @@
       color: #fff;
       box-shadow: 0 2px 6px rgba(33,150,243,0.35);
     }
-    .cost-callout {
-      margin-top: 6px;
-      font-size: 11.5px;
-      color: #607080;
-      text-align: center;
-    }
-    .cost-callout strong { color: #1a2433; }
 
-    .res-table tbody tr td {
-      padding: 10px 12px;
+    /* Bascule principale Coût carburant / Station la moins chère, en haut de
+       page. Classes dédiées (pas .ar-toggle-btn) pour ne pas être affectées
+       par le toggle Aller simple/Aller-retour, qui recible tous les
+       .ar-toggle-btn de la page. */
+    .main-toggle {
+      display: flex;
+      background: #e2e8ee;
+      border-radius: 999px;
+      padding: 3px;
+      margin-bottom: 16px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .main-toggle-btn {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
       font-size: 13px;
-      background: #f5f7fa;
+      font-weight: 700;
+      border-radius: 999px;
+      cursor: pointer;
+      color: #607080;
+      background: none;
+      border: none;
+      font-family: inherit;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
     }
-    .res-table tbody tr td:first-child {
-      border-radius: 10px 0 0 10px;
-      color: #455060;
-    }
-    .res-table tbody tr td:not(:first-child) {
-      text-align: center;
-      font-weight: 600;
-      color: #1a2433;
-    }
-    .res-table tbody tr td:last-child {
-      background: #e8f4ff;
-      border-radius: 0 10px 10px 0;
+    .main-toggle-btn.active {
+      background: #0d47a1;
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(13,71,161,0.35);
     }
 
-    /* Coût par personne (partage de frais) : sous-ligne discrète dans la même
-       cellule que le coût carburant, plutôt qu'une ligne séparée. */
-    #r-cout { position: relative; }
-    #r-cout.has-per-person { padding-bottom: 34px; }
+    /* Coût par personne (partage de frais) : sous-ligne discrète sous le
+       montant. En flux normal (plus besoin de positionnement absolu
+       maintenant que la ligne n'est plus une cellule de tableau). */
+    #r-cout { text-align: right; }
     .per-person-note {
-      position: absolute;
-      left: 4px; right: 4px;
-      bottom: 4px;
+      margin-top: 2px;
       line-height: 1.25;
       font-size: 9.5px;
       font-weight: 600;
-      opacity: 0.8;
+      color: #607080;
+      opacity: 0.85;
     }
 
     /* Message rotatif quand on clique sur + alors qu'on est déjà au maximum de
@@ -721,41 +784,40 @@
       color: #aab4bf;
     }
 
-    /* Sous-blocs résultats */
-    .res-table tr.group-header td {
-      background: none;
-      border-radius: 0;
-      padding: 12px 4px 4px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #90a4ae;
-      border-bottom: none;
-    }
-    /* Rapproche le bandeau "Trajet" du haut du tableau. */
-    .res-table tbody tr.group-header:first-of-type td { padding-top: 0; }
-    .res-table tr.group-row td { border-radius: 0; }
-    .res-table tr.group-row td:first-child { border-radius: 0; }
-    .res-table tr.group-row td:last-child { border-radius: 0; }
-    .res-table tr.group-first td:first-child { border-radius: 10px 0 0 0; }
-    .res-table tr.group-first td:last-child { border-radius: 0 10px 0 0; }
-    .res-table tr.group-last td:first-child { border-radius: 0 0 0 10px; }
-    .res-table tr.group-last td:last-child { border-radius: 0 0 10px 0; }
-
-    /* Contours subtils pour séparer visuellement les blocs Trajet et Coût & conso.
-       Bordure continue autour de chaque ligne (pas de trait vertical interne). */
-    .res-table tr.group-row td { border-top: 1px solid #dbe3ec; border-bottom: 1px solid #dbe3ec; }
-    .res-table tr.group-row td:first-child { border-left: 1px solid #dbe3ec; }
-    .res-table tr.group-row td:last-child { border-right: 1px solid #dbe3ec; }
-
+    /* Bordure animée "chasing shine" + halo pulsé, pour mettre en valeur
+       la station la moins chère. Dégrade proprement (bordure verte fixe)
+       sur les navigateurs sans support de @property/conic-gradient. */
+    @property --cheapest-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
     .cheapest-note {
+      position: relative;
       text-align: left;
       background: #f5f8fb;
-      border: 1px solid #eef2f6;
+      border: 3px solid #2e7d32;
       border-radius: 14px;
       padding: 12px 14px;
       margin-top: 22px;
+      animation: cheapest-glow 2.4s ease-in-out infinite;
+    }
+    .cheapest-note::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: inherit;
+      padding: 3px;
+      background: conic-gradient(from var(--cheapest-angle),
+        #2e7d32 0deg, #2e7d32 265deg,
+        #a5d6a7 300deg, #ffffff 320deg, #a5d6a7 340deg,
+        #2e7d32 360deg);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: cheapest-spin 6s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes cheapest-spin { to { --cheapest-angle: 360deg; } }
+    @keyframes cheapest-glow {
+      0%, 100% { box-shadow: 0 0 0 rgba(46,125,50,0); }
+      50% { box-shadow: 0 0 16px rgba(46,125,50,0.45); }
     }
     .cheapest-header {
       display: flex;
@@ -772,6 +834,35 @@
     }
     .cheapest-detail { font-size: 13px; color: #455060; line-height: 1.4; }
     .cheapest-detail strong { color: #2e7d32; font-size: 15px; }
+    /* Le bandeau de liens intégré à l'iframe OSM (Signaler un problème /
+       Faire un don / Conditions d'utilisation) ne peut pas être retiré : il
+       fait partie du contenu de l'iframe (autre origine). On le masque en
+       rognant le bas via un conteneur de hauteur fixe (overflow hidden) +
+       une iframe plus grande décalée dedans, et on affiche notre propre
+       mention d'attribution en dessous, sobre et conforme à leurs CGU. */
+    .cheapest-map-wrap {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      overflow: hidden;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+    .cheapest-map-wrap .cheapest-map {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 225px;
+      border: none;
+    }
+    .cheapest-map-attrib {
+      font-size: 10px;
+      color: #90a4ae;
+      text-align: right;
+      margin-top: 3px;
+    }
+    .cheapest-map-attrib a { color: #90a4ae; }
     .cheapest-link {
       display: inline-flex;
       align-items: center;
@@ -787,6 +878,28 @@
       transition: background 0.15s;
     }
     .cheapest-link:hover { background: #bbdefb; }
+    .cheapest-empty { font-size: 12.5px; color: #90a4ae; font-style: italic; }
+    .cheapest-note.loading { opacity: 0.6; }
+    .cheapest-radius {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e3e9ef;
+    }
+    .cheapest-radius-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #607080;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .cheapest-slider {
+      flex: 1;
+      accent-color: #1976d2;
+      cursor: pointer;
+    }
 
     .maps-wrap {
       text-align: center;
@@ -811,10 +924,10 @@
   <!-- PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Carburant">
+  <meta name="apple-mobile-web-app-title" content="Tratjet">
   <meta name="theme-color" content="#1565c0">
-  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkNvw7t0IGNhcmJ1cmFudCB0cmFqZXQiLAogICJzaG9ydF9uYW1lIjogIkNhcmJ1cmFudCIsCiAgImRlc2NyaXB0aW9uIjogIkNhbGN1bGF0ZXVyIGRlIGNvw7t0IGNhcmJ1cmFudCBwb3VyIHVuIHRyYWpldCIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZThmNWU5IiwKICAidGhlbWVfY29sb3IiOiAiIzE1NjVjMCIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbCiAgICB7InNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBMU1USWdOVEV5SWo0OGNtVmpkQ0IzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSWdjbmc5SWpFeE5TSWdabWxzYkQwaUl6RTFOalZqTUNJdlBqeDBaWGgwSUhrOUlqTTBNQ0lnZUQwaU1qVTJJaUIwWlhoMExXRnVZMmh2Y2owaWJXbGtaR3hsSWlCbWIyNTBMWE5wZW1VOUlqTXdNQ0lnWm05dWRDMW1ZVzFwYkhrOUluTmxjbWxtSWo3aW03MDhMM1JsZUhRK1BDOXpkbWMrIiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn0KICBdCn0=">
-  <link rel="apple-touch-icon" href="logo budget trajet.png">
+  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlRyYXRqZXQiLAogICJzaG9ydF9uYW1lIjogIlRyYXRqZXQiLAogICJkZXNjcmlwdGlvbiI6ICJDb8O7dCBjYXJidXJhbnQgZXQgc3RhdGlvbiBsYSBtb2lucyBjaMOocmUgcG91ciB1biB0cmFqZXQiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2VlZjJmNiIsCiAgInRoZW1lX2NvbG9yIjogIiMxNTY1YzAiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjJhV1YzUW05NFBTSXdJREFnTlRFeUlEVXhNaUlnZUcxc2JuTTlJbWgwZEhBNkx5OTNkM2N1ZHpNdWIzSm5Mekl3TURBdmMzWm5JaUIzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSStDaUFnUEdSbFpuTStDaUFnSUNBOGJHbHVaV0Z5UjNKaFpHbGxiblFnYVdROUltSm5JaUI0TVQwaU1DSWdlVEU5SWpBaUlIZ3lQU0l4SWlCNU1qMGlNU0krQ2lBZ0lDQWdJRHh6ZEc5d0lHOW1abk5sZEQwaU1DSWdjM1J2Y0MxamIyeHZjajBpSXpJeE9UWm1NeUl2UGdvZ0lDQWdJQ0E4YzNSdmNDQnZabVp6WlhROUlqRWlJSE4wYjNBdFkyOXNiM0k5SWlNd1pEUTNZVEVpTHo0S0lDQWdJRHd2YkdsdVpXRnlSM0poWkdsbGJuUStDaUFnUEM5a1pXWnpQZ29nSUR4eVpXTjBJSGRwWkhSb1BTSTFNVElpSUdobGFXZG9kRDBpTlRFeUlpQnllRDBpTVRFMUlpQm1hV3hzUFNKMWNtd29JMkpuS1NJdlBnb0tJQ0E4WnlCMGNtRnVjMlp2Y20wOUluUnlZVzV6YkdGMFpTZ3lOVFlzTWpjd0tTSStDaUFnSUNBOGNHRjBhQ0JrUFNKTklDMHhORFlzTkRRZ1F5QXRNVGMyTERVeUlDMHhPVFlzTkRJZ0xUSXdNQ3d4TmlCRElDMHlNRElzTFRJZ0xURTVOQ3d0TVRRZ0xURTRNQ3d0TVRZaUNpQWdJQ0FnSUNBZ0lDQm1hV3hzUFNKdWIyNWxJaUJ6ZEhKdmEyVTlJaU5tWm1abVptWWlJSE4wY205clpTMTNhV1IwYUQwaU1URWlJSE4wY205clpTMXNhVzVsWTJGd1BTSnliM1Z1WkNJdlBnb0tJQ0FnSUR4d1lYUm9JR1E5SWswZ0xURTFNQ3cyTUFvZ0lDQWdJQ0FnSUNBZ0lDQWdReUF0TVRVeUxDMDJJQzB4TVRBc0xUVXlJQzAyTUN3dE56QUtJQ0FnSUNBZ0lDQWdJQ0FnSUVNZ0xUSXdMQzA0TkNBeU5pd3RPRFFnTmpZc0xUWTJDaUFnSUNBZ0lDQWdJQ0FnSUNCRElEazJMQzAxTWlBeE1UZ3NMVE13SURFMU1Dd3RNalFLSUNBZ0lDQWdJQ0FnSUNBZ0lFTWdNVGMyTEMweE9DQXhPVEFzTFRJZ01UZzRMREU0Q2lBZ0lDQWdJQ0FnSUNBZ0lDQkRJREU0Tml3ME1DQXhOamdzTlRZZ01UVXdMRFl3Q2lBZ0lDQWdJQ0FnSUNBZ0lDQk1JREUxTUN3Mk5Bb2dJQ0FnSUNBZ0lDQWdJQ0FnVENBdE1UVXdMRFkwSUZvaUNpQWdJQ0FnSUNBZ0lDQm1hV3hzUFNJalptWm1abVptSWk4K0Nnb2dJQ0FnUEdOcGNtTnNaU0JqZUQwaUxUTTRJaUJqZVQwaUxUYzJJaUJ5UFNJeU5pSWdabWxzYkQwaUkyWm1abVptWmlJdlBnb2dJQ0FnUEdOcGNtTnNaU0JqZUQwaUxUTTRJaUJqZVQwaUxUYzJJaUJ5UFNJeE1pSWdabWxzYkQwaUl6QmtORGRoTVNJdlBnb0tJQ0FnSUR4d1lYUm9JR1E5SWswZ0xUWXNMVFU0SUVNZ01qQXNMVGN3SURVd0xDMDNNQ0EzTUN3dE5UWWdReUEzT0N3dE5UQWdPRElzTFRRd0lEZ3dMQzB6TUNCTUlDMDBMQzB6TUNCYUlpQm1hV3hzUFNJak1HUTBOMkV4SWlCdmNHRmphWFI1UFNJd0xqZzFJaTgrQ2dvZ0lDQWdQR05wY21Oc1pTQmplRDBpTVRNd0lpQmplVDBpTFRZaUlISTlJakV3SWlCbWFXeHNQU0lqTUdRME4yRXhJaTgrQ2dvZ0lDQWdQSEJoZEdnZ1pEMGlUU0F4TlRBc0xUSTBJRU1nTVRjeUxDMHlNQ0F4T1RBc0xUUWdNVGc0TERFNElpQm1hV3hzUFNKdWIyNWxJaUJ6ZEhKdmEyVTlJaU5tWm1JM01ETWlJSE4wY205clpTMTNhV1IwYUQwaU1UQWlJSE4wY205clpTMXNhVzVsWTJGd1BTSnliM1Z1WkNJdlBnb0tJQ0FnSUR4d1lYUm9JR1E5SWswZ01UZzBMRFFnVENBeU1UUXNMVElpSUhOMGNtOXJaVDBpSTJabVlqY3dNeUlnYzNSeWIydGxMWGRwWkhSb1BTSTJJaUJ6ZEhKdmEyVXRiR2x1WldOaGNEMGljbTkxYm1RaUx6NEtJQ0FnSUR4d1lYUm9JR1E5SWswZ01UZzJMREUwSUV3Z01qRTJMREUwSWlCemRISnZhMlU5SWlObVptSTNNRE1pSUhOMGNtOXJaUzEzYVdSMGFEMGlOaUlnYzNSeWIydGxMV3hwYm1WallYQTlJbkp2ZFc1a0lpOCtDaUFnSUNBOGNHRjBhQ0JrUFNKTklERTROQ3d5TkNCTUlESXhNaXd6TWlJZ2MzUnliMnRsUFNJalptWmlOekF6SWlCemRISnZhMlV0ZDJsa2RHZzlJallpSUhOMGNtOXJaUzFzYVc1bFkyRndQU0p5YjNWdVpDSXZQZ29LSUNBZ0lEeGphWEpqYkdVZ1kzZzlJaTA1TWlJZ1kzazlJalkwSWlCeVBTSXpOQ0lnWm1sc2JEMGlJMlptWWpjd015SXZQZ29nSUNBZ1BHTnBjbU5zWlNCamVEMGlPVElpSUdONVBTSTJOQ0lnY2owaU16UWlJR1pwYkd3OUlpTm1abUkzTURNaUx6NEtJQ0FnSUR4amFYSmpiR1VnWTNnOUlpMDVNaUlnWTNrOUlqWTBJaUJ5UFNJeE5DSWdabWxzYkQwaUl6QmtORGRoTVNJdlBnb2dJQ0FnUEdOcGNtTnNaU0JqZUQwaU9USWlJR041UFNJMk5DSWdjajBpTVRRaUlHWnBiR3c5SWlNd1pEUTNZVEVpTHo0S0lDQThMMmMrQ2p3dmMzWm5QZ289IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
+  <link rel="apple-touch-icon" href="logo trajet rat.png">
   <script>
     if ('serviceWorker' in navigator) {
       const sw = `self.addEventListener('fetch', e => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });`;
@@ -827,12 +940,19 @@
 <div class="page">
 
   <div class="header">
-    <h1>Copilote budget</h1>
-    <p>Entrez les paramètres de votre trajet, on s'occupe des calculs : coût du carburant et litres consommés. <br><span class="intro-bonus">⭐ En bonus : on vous trouve la station la moins chère et la plus proche de votre départ !</span></p>
+    <h1>T<span class="rat-emphasis">rat</span>jet</h1>
+    <p>Entrez les paramètres de votre trajet, on s'occupe des calculs : coût du carburant et litres consommés. <br><span class="intro-bonus"><span class="intro-bonus-label">En bonus</span> : on vous trouve la station la moins chère et la plus proche de votre départ !</span></p>
   </div>
 
   <input type="hidden" id="apiKey" value="eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImY1NjRiM2M4Yjc0OTQ0ZDlhNmNjM2FiOWQzNjFhNTE2IiwiaCI6Im11cm11cjY0In0=">
 
+  <!-- Bascule Coût carburant (trajet) / Station la moins chère (près de moi) -->
+  <div class="main-toggle" id="mainToggle">
+    <button type="button" class="main-toggle-btn active" data-main-mode="cout" onclick="setMainMode('cout')">Coût carburant</button>
+    <button type="button" class="main-toggle-btn" data-main-mode="station" onclick="setMainMode('station')">Station la moins chère</button>
+  </div>
+
+  <div id="modeCout">
   <!-- Paramètres -->
   <div class="card">
     <div class="card-title">Paramètres du trajet</div>
@@ -843,7 +963,7 @@
       <div class="points-wrap">
         <div id="points"></div>
         <!-- Inverser départ ↔ destination (visible seulement sans étape) -->
-        <button type="button" class="swap-btn" id="swapBtn" onclick="swapItinerary()" aria-label="Inverser départ et destination">⇅</button>
+        <button type="button" class="swap-btn" id="swapBtn" onclick="swapItinerary()" aria-label="Inverser départ et arrivée">⇅</button>
       </div>
 
       <div class="itinerary-controls">
@@ -852,7 +972,7 @@
     </div>
 
     <!-- Bloc Carburant / Consommation -->
-    <div class="section">
+    <div class="section section-carburant">
     <div class="param-row carburant-row">
       <div class="param-icon">⛽</div>
       <div class="param-label">Carburant</div>
@@ -908,36 +1028,22 @@
   <div class="card resultats" id="sectionResultats" style="margin-top:14px;">
     <div class="card-title">Résultats</div>
     <div class="ar-toggle" id="arToggle">
-      <button type="button" class="ar-toggle-btn" data-mode="simple" onclick="setResultMode('simple')">Aller simple</button>
-      <button type="button" class="ar-toggle-btn active" data-mode="ar" onclick="setResultMode('ar')">Aller-retour</button>
+      <button type="button" class="ar-toggle-btn active" data-mode="simple" onclick="setResultMode('simple')">Aller simple</button>
+      <button type="button" class="ar-toggle-btn" data-mode="ar" onclick="setResultMode('ar')">Aller-retour</button>
     </div>
-    <table class="res-table">
-      <tbody>
-        <tr class="group-header">
-          <td colspan="2">Trajet</td>
-        </tr>
-        <tr class="group-row group-first">
-          <td>Distance</td>
-          <td id="r-dist">—</td>
-        </tr>
-        <tr class="group-row group-last">
-          <td>Durée</td>
-          <td id="r-duree">—</td>
-        </tr>
-        <tr class="group-header">
-          <td colspan="2">Coût & conso</td>
-        </tr>
-        <tr class="group-row group-first">
-          <td>Coût carburant</td>
-          <td id="r-cout">—</td>
-        </tr>
-        <tr class="group-row group-last">
-          <td>Litres consommés</td>
-          <td id="r-litres">—</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="cost-callout" id="costCallout"></div>
+    <div class="res-trajet-line"><strong id="r-dist">—</strong> · <strong id="r-duree">—</strong></div>
+
+    <div class="res-section-title">Coût & conso</div>
+    <div class="section res-section">
+      <div class="res-row">
+        <span class="res-label">Coût carburant</span>
+        <span class="res-value res-value-big" id="r-cout">—</span>
+      </div>
+      <div class="res-row">
+        <span class="res-label">Litres consommés</span>
+        <span class="res-value res-value-big" id="r-litres">—</span>
+      </div>
+    </div>
     <div class="maps-wrap" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
     <a class="maps-link" id="mapsLink" href="#" target="_blank"
        style="width:220px !important;height:38px;display:flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;">
@@ -952,39 +1058,60 @@
 </div>
     <div class="cheapest-note" id="cheapestNote" style="display:none;"></div>
   </div>
+  </div>
+
+  <!-- Station la moins chère près de chez moi, indépendamment de tout trajet -->
+  <div id="modeStation" style="display:none;">
+    <div class="card">
+      <div class="card-title">Station la moins chère près de chez moi</div>
+
+      <div class="section">
+        <div class="param-row point-row">
+          <div class="param-icon">📍</div>
+          <div class="param-label">Ma position</div>
+          <div class="param-input">
+            <div class="autocomplete-wrap">
+              <input type="text" id="stationAdresse" class="point-input" autocomplete="off" placeholder="Ton adresse" oninput="onStationAdresseInput(this)" onfocus="showFavoritesIfEmpty(this)">
+              <div class="autocomplete-list"></div>
+            </div>
+            <button type="button" class="fav-star" id="stationFavStar" title="Enregistrer en favori" onclick="toggleFavPlace(document.getElementById('stationAdresse').value, this)">☆</button>
+          </div>
+        </div>
+        <button type="button" class="link-btn" onclick="utiliserPositionActuelle()"> Utiliser ma position actuelle</button>
+        <div class="prix-actuel" id="stationPosStatus"></div>
+      </div>
+
+      <div class="section section-carburant">
+        <div class="param-row carburant-row">
+          <div class="param-icon">⛽</div>
+          <div class="param-label">Carburant</div>
+          <div class="param-input">
+            <select id="carburantStation">
+              <option value="sp95">Sans plomb 95</option>
+              <option value="sp98">Sans plomb 98</option>
+              <option value="gazole">Gazole (Diesel)</option>
+              <option value="e85">Superéthanol E85</option>
+              <option value="gplc">GPLc</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn" id="stationSearchBtn" onclick="rechercherStationStandalone()">Chercher la station la moins chère</button>
+      <div class="loader" id="stationLoader">⏳ Recherche en cours…</div>
+      <div class="error" id="stationError"></div>
+
+      <div class="cheapest-note" id="cheapestNoteStation" style="display:none; margin-top:14px;"></div>
+    </div>
+  </div>
 
 </div>
 <script>
 // Autocomplétion
 const autoTimers = new WeakMap();
 
-// Place les résultats français en tête (tri stable : l'ordre de pertinence
-// est conservé à l'intérieur de chaque groupe).
-function frenchFirst(features) {
-  return features.slice().sort((a, b) => {
-    const fa = (a.properties && a.properties.country_a === 'FRA') ? 0 : 1;
-    const fb = (b.properties && b.properties.country_a === 'FRA') ? 0 : 1;
-    return fa - fb;
-  });
-}
-
-// Trajets limités au continent européen : on écarte les résultats de géocodage
-// hors Europe (Asie, États-Unis, îles lointaines…) pour simplifier les choix.
-const EUROPE_COUNTRIES = new Set([
-  'ALA','ALB','AND','AUT','BEL','BGR','BIH','BLR','CHE','CYP','CZE','DEU','DNK',
-  'ESP','EST','FIN','FRA','FRO','GBR','GGY','GIB','GRC','HRV','HUN','IMN','IRL',
-  'ISL','ITA','JEY','LIE','LTU','LUX','LVA','MCO','MDA','MKD','MLT','MNE','NLD',
-  'NOR','POL','PRT','ROU','SMR','SRB','SVK','SVN','SWE','UKR','VAT','XKX',
-]);
-function isEurope(feature) {
-  const cc = feature.properties && feature.properties.country_a;
-  return EUROPE_COUNTRIES.has(cc);
-}
-
-// --- Autocomplétion (Photon/komoot) : mêmes idées que frenchFirst/isEurope
-// ci-dessus mais Photon utilise des codes pays ISO 3166-1 alpha-2 ("FR")
-// au lieu des codes alpha-3 ("FRA") renvoyés par ORS/Pelias pour le
-// géocodage final. On duplique donc la logique avec le bon format de code.
+// Codes pays ISO 3166-1 alpha-2 pour filtrer les résultats Photon (le reste
+// de l'Europe, la France étant déjà couverte par la BAN dans searchPlaces).
 const EUROPE_COUNTRIES_2 = new Set([
   'AX','AL','AD','AT','BE','BG','BA','BY','CH','CY','CZ','DE','DK',
   'ES','EE','FI','FR','FO','GB','GG','GI','GR','HR','HU','IM','IE',
@@ -995,16 +1122,8 @@ function isEuropePhoton(feature) {
   const cc = feature.properties && feature.properties.countrycode;
   return EUROPE_COUNTRIES_2.has(cc);
 }
-function frenchFirstPhoton(features) {
-  return features.slice().sort((a, b) => {
-    const fa = (a.properties && a.properties.countrycode === 'FR') ? 0 : 1;
-    const fb = (b.properties && b.properties.countrycode === 'FR') ? 0 : 1;
-    return fa - fb;
-  });
-}
 // Construit un libellé lisible à partir des propriétés Photon (ville, code
-// postal, rue… selon ce qui est disponible), sur le même principe que le
-// libellé enrichi qu'ORS fournissait déjà tout formé dans "label".
+// postal, rue… selon ce qui est disponible).
 function photonLabel(p) {
   const parts = [];
   if (p.housenumber && p.street) parts.push(p.housenumber + ' ' + p.street);
@@ -1016,6 +1135,35 @@ function photonLabel(p) {
   if (zone && zone !== ville && !parts.includes(zone)) parts.push(zone);
   if (p.country && !parts.includes(p.country)) parts.push(p.country);
   return parts.filter(Boolean).join(', ');
+}
+
+// Recherche de lieux : API Adresse officielle (BAN, data.gouv.fr) en priorité
+// pour la France — exhaustive et bien priorisée sur les adresses françaises
+// (jusqu'au numéro de rue), gratuite et sans clé — complétée par Photon
+// (Komoot) pour le reste de l'Europe, que BAN ne couvre pas.
+async function searchPlaces(q, limit) {
+  const [banRes, photonRes] = await Promise.all([
+    fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=${limit}&autocomplete=1`)
+      .then(r => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] })),
+    fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=${limit}&lang=fr`)
+      .then(r => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] })),
+  ]);
+  const ban = (banRes.features || []).map(f => ({
+    label: f.properties.label,
+    lat: f.geometry.coordinates[1],
+    lng: f.geometry.coordinates[0],
+    city: f.properties.city || f.properties.name,
+  }));
+  const photon = (photonRes.features || [])
+    .filter(f => isEuropePhoton(f) && f.properties.countrycode !== 'FR')
+    .map(f => ({
+      label: photonLabel(f.properties),
+      lat: f.geometry.coordinates[1],
+      lng: f.geometry.coordinates[0],
+      city: f.properties.city || f.properties.name,
+    }))
+    .filter(f => f.label);
+  return [...ban, ...photon];
 }
 
 // --- Lieux favoris (départ/destination/étapes) : mémorisés dans le navigateur,
@@ -1112,30 +1260,23 @@ async function onAutoComplete(input) {
     // proposé en Allemagne, par exemple).
     const texteGeo = val;
     try {
-      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(texteGeo)}&limit=10&lang=fr&lat=48.8566&lon=2.3522`;
-      const r = await fetch(url);
-      if (!r.ok) { list.style.display = 'none'; return; }
-      const d = await r.json();
-      if (!d.features || d.features.length === 0) { list.style.display = 'none'; return; }
+      const results = await searchPlaces(texteGeo, 10);
+      if (!results.length) { list.style.display = 'none'; return; }
       list.innerHTML = '';
       const vus = new Set();
-      frenchFirstPhoton(d.features.filter(isEuropePhoton)).forEach(f => {
+      results.forEach(f => {
         if (list.children.length >= 6) return; // limite l'affichage
-        // Libellé enrichi avec le département/la région : indispensable pour
-        // distinguer les homonymes (ex. Vanne en Haute-Saône vs Vannes dans le
-        // Morbihan), et le texte choisi désambiguïse aussi le géocodage final.
-        const label = photonLabel(f.properties);
-        if (!label) return;
+        if (!f.label) return;
         // Le géocodeur renvoie parfois plusieurs résultats au même libellé : on dédoublonne.
-        const cle = label.trim().toLowerCase();
+        const cle = f.label.trim().toLowerCase();
         if (vus.has(cle)) return;
         vus.add(cle);
         const div = document.createElement('div');
         div.className = 'autocomplete-item';
-        div.textContent = label;
+        div.textContent = f.label;
         div.addEventListener('mousedown', e => {
           e.preventDefault();
-          input.value = label;
+          input.value = f.label;
           list.style.display = 'none';
           resetResultat();
           syncStarForInput(input);
@@ -1165,6 +1306,31 @@ function showError(msg) { const e=document.getElementById('error'); e.textConten
 function hideError() { document.getElementById('error').style.display='none'; }
 function setLoading(on) { document.getElementById('loader').style.display=on?'block':'none'; document.getElementById('calcBtn').disabled=on; }
 function resetResultat() { document.getElementById('sectionResultats').style.display='none'; hideError(); }
+
+// Bascule principale : Coût carburant (trajet complet) / Station la moins
+// chère (recherche indépendante autour d'une position donnée).
+function setMainMode(mode, updateHash) {
+  document.querySelectorAll('.main-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.mainMode === mode));
+  document.getElementById('modeCout').style.display = mode === 'cout' ? '' : 'none';
+  document.getElementById('modeStation').style.display = mode === 'station' ? '' : 'none';
+  // Lien distinct par onglet (#cout / #station), pour pouvoir le partager ou
+  // le remettre en favori directement sur le bon onglet.
+  if (updateHash !== false) history.replaceState(null, '', '#' + mode);
+}
+
+// Au chargement (et si l'utilisateur navigue avec les boutons précédent/suivant
+// du navigateur), on ouvre l'onglet indiqué par l'URL.
+function applyMainModeFromHash() {
+  const mode = location.hash === '#station' ? 'station' : 'cout';
+  setMainMode(mode, false);
+}
+applyMainModeFromHash();
+window.addEventListener('hashchange', applyMainModeFromHash);
+syncStarForInput(document.getElementById('stationAdresse'));
+
+function showStationError(msg) { const e=document.getElementById('stationError'); e.textContent=msg; e.style.display='block'; }
+function hideStationError() { document.getElementById('stationError').style.display='none'; }
+function setStationLoading(on) { document.getElementById('stationLoader').style.display=on?'block':'none'; document.getElementById('stationSearchBtn').disabled=on; }
 
 // Petit retour haptique (Android via l'API Vibration ; Safari iOS ne l'expose
 // pas, aucune astuce fiable n'existe côté web pour la remplacer).
@@ -1226,23 +1392,67 @@ function consoInit() {
   track.innerHTML = html;
 
   let dragging = false, startX = 0, startVal = 7.5;
+  // Vitesse lissée du glissement (en unités de consommation par ms), pour
+  // prolonger le mouvement en douceur (inertie) au relâchement au lieu de
+  // s'arrêter net.
+  let lastX = 0, lastT = 0, velocity = 0, momentumFrame = null;
+  function stopMomentum() {
+    if (momentumFrame) { cancelAnimationFrame(momentumFrame); momentumFrame = null; }
+  }
   box.addEventListener('pointerdown', e => {
+    stopMomentum();
     dragging = true; startX = e.clientX; startVal = consoValeur();
+    lastX = e.clientX; lastT = performance.now(); velocity = 0;
     track.style.transition = 'none';
     box.setPointerCapture(e.pointerId);
     e.preventDefault();
   });
   box.addEventListener('pointermove', e => {
     if (!dragging) return;
+    const now = performance.now();
+    const dt = now - lastT;
+    // Ignore les intervalles quasi nuls (deux évènements trop rapprochés) :
+    // la division par un dt minuscule produirait une vitesse instantanée
+    // aberrante qui fausserait toute l'inertie. On borne aussi la vitesse à
+    // une valeur réaliste, pour la même raison.
+    if (dt >= 8) {
+      const instVel = -(e.clientX - lastX) / CONSO_PPU / dt;
+      const MAX_VEL = 0.03; // ~30 unités/seconde, flick très rapide
+      velocity = velocity * 0.7 + Math.max(-MAX_VEL, Math.min(MAX_VEL, instVel)) * 0.3; // lissage anti-à-coups
+      lastX = e.clientX; lastT = now;
+    }
+
     const prev = consoValeur();
     consoSet(startVal - (e.clientX - startX) / CONSO_PPU, true);
     if (consoValeur() !== prev) hapticTick(); // petite vibration à chaque cran
   });
+  // Inertie : après relâchement, le défilement continue en ralentissant
+  // progressivement selon la vitesse du geste, au lieu de s'arrêter net.
+  function startMomentum() {
+    if (Math.abs(velocity) < 0.008) { track.style.transition = 'transform 0.15s ease-out'; return; }
+    let v = velocity;
+    let lastTime = performance.now();
+    const step = (now) => {
+      const dt = now - lastTime;
+      lastTime = now;
+      v *= Math.pow(0.08, dt / 1000); // décroissance : ~8% de la vitesse restante après 1s
+      const prevVal = consoValeur();
+      consoSet(consoValeur() + v * dt, true);
+      if (consoValeur() !== prevVal) hapticTick();
+      const atBound = consoValeur() <= CONSO_MIN || consoValeur() >= CONSO_MAX;
+      if (Math.abs(v) > 0.0008 && !atBound) {
+        momentumFrame = requestAnimationFrame(step);
+      } else {
+        momentumFrame = null;
+        track.style.transition = 'transform 0.15s ease-out';
+      }
+    };
+    momentumFrame = requestAnimationFrame(step);
+  }
   const end = () => {
     if (!dragging) return;
     dragging = false;
-    track.style.transition = 'transform 0.15s ease-out';
-    consoSet(consoValeur(), true);
+    startMomentum();
   };
   box.addEventListener('pointerup', end);
   box.addEventListener('pointercancel', end);
@@ -1296,7 +1506,6 @@ function passagersSet(v) {
 const PASS_MAX_MESSAGES = [
   "Alors, plus de 9 en voiture ça va être compliqué…",
   "Pour un conducteur de métro bien sûr y'a pas de sujets",
-  "Ou à la limite si vous êtes le capitaine d'un canoë de sauvetage de migrants…",
   "Mais en voiture, y'a pas moyen",
 ];
 let passMaxMsgIndex = 0;
@@ -1335,6 +1544,11 @@ function showPassMinMessage() {
   clearTimeout(passMinMsgTimer);
   passMinMsgTimer = setTimeout(() => bubble.classList.remove('show'), 2600);
 }
+function hidePassMinMessage() {
+  clearTimeout(passMinMsgTimer);
+  const bubble = document.getElementById('passMinMsg');
+  if (bubble) bubble.classList.remove('show');
+}
 function passagersInit() {
   const minusBtn = document.getElementById('passMinus');
   const plusBtn = document.getElementById('passPlus');
@@ -1344,6 +1558,7 @@ function passagersInit() {
   });
   holdRepeat(plusBtn, () => {
     if (passagersValeur() >= PASS_MAX) { showPassMaxMessage(); return; }
+    hidePassMinMessage();
     passagersSet(passagersValeur() + 1);
   });
 }
@@ -1389,18 +1604,46 @@ function distKm(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.asin(Math.sqrt(a));
 }
 
-// Station la moins chère à proximité du départ (rayon 8 km), pour le carburant
-// choisi. Best-effort : en cas d'échec (API indisponible, aucune station dans le
+// Mini-carte intégrée (Google Maps, sans clé API) montrant l'emplacement
+// exact de la station trouvée.
+function buildStationMap(lat, lon) {
+  const delta = 0.01;
+  const bbox = [lon - delta, lat - delta, lon + delta, lat + delta].join(',');
+  const wrap = document.createElement('div');
+  wrap.className = 'cheapest-map-wrap';
+  const iframe = document.createElement('iframe');
+  iframe.className = 'cheapest-map';
+  iframe.loading = 'lazy';
+  iframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
+  wrap.appendChild(iframe);
+
+  const attrib = document.createElement('div');
+  attrib.className = 'cheapest-map-attrib';
+  attrib.innerHTML = '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">contributeurs OpenStreetMap</a>';
+
+  const frag = document.createDocumentFragment();
+  frag.appendChild(wrap);
+  frag.appendChild(attrib);
+  return frag;
+}
+
+// Station la moins chère à proximité du départ, pour le carburant choisi.
+// Best-effort : en cas d'échec (API indisponible, aucune station dans le
 // rayon…), on masque simplement la note, sans bloquer le reste du calcul.
+// Le rayon peut être élargi via un curseur depuis l'encadré résultat, sans
+// relancer tout le calcul du trajet.
 const STATION_RAYON_KM = 8;
-async function fetchStationMoinsChere(lat, lon, type) {
+const STATION_RAYON_MIN = 5;
+const STATION_RAYON_MAX = 50;
+async function fetchStationMoinsChere(lat, lon, type, rayonKm) {
+  rayonKm = rayonKm || STATION_RAYON_KM;
   const field = (type === 'sp95') ? 'e10_prix' : CARB_FIELD[type];
   if (!field) return null;
   try {
     // Le tri "sort" de l'API porte sur un champ texte : il n'est pas fiable pour
     // classer les prix numériquement (ex. "1.9" avant "1.85"). On récupère donc
     // toutes les stations du rayon et on calcule nous-mêmes le minimum.
-    const url = `https://data.economie.gouv.fr/api/records/1.0/search/?dataset=prix-des-carburants-en-france-flux-instantane-v2&geofilter.distance=${lat},${lon},${STATION_RAYON_KM * 1000}&rows=100`;
+    const url = `https://data.economie.gouv.fr/api/records/1.0/search/?dataset=prix-des-carburants-en-france-flux-instantane-v2&geofilter.distance=${lat},${lon},${rayonKm * 1000}&rows=100`;
     const r = await fetch(url);
     if (!r.ok) return null;
     const d = await r.json();
@@ -1414,15 +1657,240 @@ async function fetchStationMoinsChere(lat, lon, type) {
       const sLat = geo ? geo[1] : (f.latitude !== undefined ? parseFloat(f.latitude) : null);
       const sLon = geo ? geo[0] : (f.longitude !== undefined ? parseFloat(f.longitude) : null);
       // Filtre client en plus du rayon serveur (sécurité si l'API renvoie plus large).
-      if (sLat !== null && sLon !== null && distKm(lat, lon, sLat, sLon) > STATION_RAYON_KM) continue;
+      if (sLat !== null && sLon !== null && distKm(lat, lon, sLat, sLon) > rayonKm) continue;
       if (!best || prix < best.prix) best = { prix, nom: f.nom || '', ville: f.ville || '', lat: sLat, lon: sLon };
     }
     return best;
   } catch (e) { return null; }
 }
 
-const DEPART_FIXE = '';
-  
+// Recherche + affichage de la station la moins chère, indépendants du reste
+// du calcul du trajet : le curseur de rayon ne relance que cet encadré, et
+// seulement au relâchement (évite un fetch à chaque pixel glissé).
+let lastStationSearch = null; // { lat, lon, type, rayon, depart, arrivee }
+
+async function rechercherStationMoinsChere() {
+  const cheapestNote = document.getElementById('cheapestNote');
+  if (!lastStationSearch) { cheapestNote.style.display = 'none'; return; }
+  const { lat, lon, type, rayon, depart, arrivee } = lastStationSearch;
+  cheapestNote.classList.add('loading');
+  const station = await fetchStationMoinsChere(lat, lon, type, rayon);
+  cheapestNote.classList.remove('loading');
+  cheapestNote.textContent = '';
+  cheapestNote.style.display = 'block';
+
+  const header = document.createElement('div');
+  header.className = 'cheapest-header';
+  const icon = document.createElement('span');
+  icon.className = 'cheapest-icon';
+  icon.textContent = '🐀';
+  header.appendChild(icon);
+  const title = document.createElement('span');
+  title.className = 'cheapest-title';
+  title.style.fontSize = '0.9em';
+  title.textContent = 'Station la moins chère près du départ';
+  header.appendChild(title);
+  cheapestNote.appendChild(header);
+
+  if (station) {
+    const detail = document.createElement('div');
+    detail.className = 'cheapest-detail';
+    const strong = document.createElement('strong');
+    strong.textContent = station.prix.toFixed(3) + ' €/L';
+    detail.appendChild(strong);
+    const lieu = [station.nom, station.ville].filter(Boolean).join(', ');
+    if (lieu) detail.appendChild(document.createTextNode(' à ' + lieu));
+    if (station.lat !== null && station.lon !== null) {
+      const dKm = distKm(lat, lon, station.lat, station.lon);
+      if (isFinite(dKm)) detail.appendChild(document.createTextNode(' (' + dKm.toFixed(1) + ' km)'));
+    }
+    cheapestNote.appendChild(detail);
+
+    if (station.lat !== null && station.lon !== null) {
+      cheapestNote.appendChild(buildStationMap(station.lat, station.lon));
+
+      const link = document.createElement('a');
+      link.className = 'cheapest-link';
+      const origin = encodeURIComponent(depart || `${lat},${lon}`);
+      const destination = encodeURIComponent(arrivee || `${station.lat},${station.lon}`);
+      link.href = `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${origin}&destination=${destination}&waypoints=${station.lat},${station.lon}`;
+      link.target = '_blank';
+      link.textContent = 'Ajouter cette station à mon trajet';
+      cheapestNote.appendChild(link);
+    }
+  } else {
+    const empty = document.createElement('div');
+    empty.className = 'cheapest-empty';
+    empty.textContent = 'Aucune station trouvée dans un rayon de ' + rayon + ' km.';
+    cheapestNote.appendChild(empty);
+  }
+
+  // Curseur pour élargir/réduire le rayon de recherche : recalcule uniquement
+  // au relâchement ("change"), pas à chaque cran glissé ("input").
+  const radiusWrap = document.createElement('div');
+  radiusWrap.className = 'cheapest-radius';
+  const label = document.createElement('span');
+  label.className = 'cheapest-radius-label';
+  label.id = 'cheapestRadiusLabel';
+  label.textContent = 'Rayon : ' + rayon + ' km';
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.className = 'cheapest-slider';
+  slider.min = STATION_RAYON_MIN;
+  slider.max = STATION_RAYON_MAX;
+  slider.step = 1;
+  slider.value = rayon;
+  slider.setAttribute('aria-label', 'Rayon de recherche de la station la moins chère');
+  slider.addEventListener('input', () => {
+    document.getElementById('cheapestRadiusLabel').textContent = 'Rayon : ' + slider.value + ' km';
+  });
+  slider.addEventListener('change', () => {
+    lastStationSearch.rayon = parseInt(slider.value, 10);
+    rechercherStationMoinsChere();
+  });
+  radiusWrap.appendChild(label);
+  radiusWrap.appendChild(slider);
+  cheapestNote.appendChild(radiusWrap);
+}
+
+// --- Station la moins chère près de chez moi, recherche indépendante d'un
+// trajet (onglet dédié) : même logique de recherche/curseur que ci-dessus,
+// mais son propre état et ses propres éléments (IDs distincts). ---
+let stationGeoCoords = null; // [lon, lat] fixé par géolocalisation, invalidé dès que l'adresse est modifiée à la main
+let lastStationSearchStandalone = null; // { lat, lon, type, rayon }
+
+function onStationAdresseInput(el) {
+  stationGeoCoords = null;
+  document.getElementById('cheapestNoteStation').style.display = 'none';
+  hideStationError();
+  if (el.value.trim().length === 0) showFavoritesIfEmpty(el);
+  else onAutoComplete(el);
+  syncStarForInput(el);
+}
+
+function utiliserPositionActuelle() {
+  const status = document.getElementById('stationPosStatus');
+  if (!navigator.geolocation) {
+    status.textContent = 'Géolocalisation non disponible sur cet appareil.';
+    return;
+  }
+  status.textContent = 'Localisation en cours…';
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      stationGeoCoords = [pos.coords.longitude, pos.coords.latitude];
+      document.getElementById('stationAdresse').value = 'Ma position actuelle';
+      status.textContent = '✓ Position récupérée';
+    },
+    () => {
+      status.textContent = 'Impossible de récupérer votre position (autorisation refusée ou indisponible).';
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+async function rechercherStationStandalone() {
+  hideStationError();
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const adresse = document.getElementById('stationAdresse').value.trim();
+  const type = document.getElementById('carburantStation').value;
+
+  if (!stationGeoCoords && !adresse) return showStationError('⚠️ Indiquez votre adresse ou utilisez votre position actuelle.');
+
+  setStationLoading(true);
+  document.getElementById('cheapestNoteStation').style.display = 'none';
+  try {
+    const coords = stationGeoCoords || await geocode(adresse);
+    lastStationSearchStandalone = { lat: coords[1], lon: coords[0], type, rayon: STATION_RAYON_KM };
+    await afficherStationStandalone();
+  } catch(e) {
+    showStationError('⚠️ ' + (e.message || 'Erreur inconnue.'));
+  } finally {
+    setStationLoading(false);
+  }
+}
+
+async function afficherStationStandalone() {
+  const cheapestNote = document.getElementById('cheapestNoteStation');
+  if (!lastStationSearchStandalone) { cheapestNote.style.display = 'none'; return; }
+  const { lat, lon, type, rayon } = lastStationSearchStandalone;
+  cheapestNote.classList.add('loading');
+  const station = await fetchStationMoinsChere(lat, lon, type, rayon);
+  cheapestNote.classList.remove('loading');
+  cheapestNote.textContent = '';
+  cheapestNote.style.display = 'block';
+
+  const header = document.createElement('div');
+  header.className = 'cheapest-header';
+  const icon = document.createElement('span');
+  icon.className = 'cheapest-icon';
+  icon.textContent = '🐀';
+  header.appendChild(icon);
+  const title = document.createElement('span');
+  title.className = 'cheapest-title';
+  title.style.fontSize = '0.9em';
+  title.textContent = 'Station la moins chère trouvée';
+  header.appendChild(title);
+  cheapestNote.appendChild(header);
+
+  if (station) {
+    const detail = document.createElement('div');
+    detail.className = 'cheapest-detail';
+    const strong = document.createElement('strong');
+    strong.textContent = station.prix.toFixed(3) + ' €/L';
+    detail.appendChild(strong);
+    const lieu = [station.nom, station.ville].filter(Boolean).join(', ');
+    if (lieu) detail.appendChild(document.createTextNode(' à ' + lieu));
+    if (station.lat !== null && station.lon !== null) {
+      const dKm = distKm(lat, lon, station.lat, station.lon);
+      if (isFinite(dKm)) detail.appendChild(document.createTextNode(' (' + dKm.toFixed(1) + ' km)'));
+    }
+    cheapestNote.appendChild(detail);
+
+    if (station.lat !== null && station.lon !== null) {
+      cheapestNote.appendChild(buildStationMap(station.lat, station.lon));
+
+      const link = document.createElement('a');
+      link.className = 'cheapest-link';
+      link.href = `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${lat},${lon}&destination=${station.lat},${station.lon}`;
+      link.target = '_blank';
+      link.textContent = 'Itinéraire vers cette station';
+      cheapestNote.appendChild(link);
+    }
+  } else {
+    const empty = document.createElement('div');
+    empty.className = 'cheapest-empty';
+    empty.textContent = 'Aucune station trouvée dans un rayon de ' + rayon + ' km.';
+    cheapestNote.appendChild(empty);
+  }
+
+  const radiusWrap = document.createElement('div');
+  radiusWrap.className = 'cheapest-radius';
+  const label = document.createElement('span');
+  label.className = 'cheapest-radius-label';
+  label.id = 'cheapestRadiusLabelStation';
+  label.textContent = 'Rayon : ' + rayon + ' km';
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.className = 'cheapest-slider';
+  slider.min = STATION_RAYON_MIN;
+  slider.max = STATION_RAYON_MAX;
+  slider.step = 1;
+  slider.value = rayon;
+  slider.setAttribute('aria-label', 'Rayon de recherche de la station la moins chère');
+  slider.addEventListener('input', () => {
+    document.getElementById('cheapestRadiusLabelStation').textContent = 'Rayon : ' + slider.value + ' km';
+  });
+  slider.addEventListener('change', () => {
+    lastStationSearchStandalone.rayon = parseInt(slider.value, 10);
+    afficherStationStandalone();
+  });
+  radiusWrap.appendChild(label);
+  radiusWrap.appendChild(slider);
+  cheapestNote.appendChild(radiusWrap);
+}
+
+const DEPART_FIXE = '60 rue de Dantzig, Paris';
+
 // --- Points du trajet (départ, étapes, destination), réordonnables ---
 const pointsEl = () => document.getElementById('points');
 
@@ -1465,7 +1933,7 @@ function refreshPoints() {
       row.classList.toggle('shift-for-handles', showHandles);
     } else if (i === rows.length - 1) {
       label.textContent = 'Arrivée';
-      input.placeholder = 'Destination'; rm.style.display = 'none';
+      input.placeholder = 'Lieu de vacances'; rm.style.display = 'none';
       row.classList.remove('is-stop');
       row.classList.toggle('shift-for-handles', showHandles);
     } else {
@@ -1648,24 +2116,13 @@ function parseGPS(texte) {
   return null;
 }
 
-async function geocode(lieu, apiKey) {
+async function geocode(lieu) {
   const gps = parseGPS(lieu);
   if (gps) return gps;
-  // Pas de « , France » forcé : focus.point (Paris) privilégie déjà la France
-  // pour les homonymes, sans casser les villes étrangères (Athènes, Berlin…).
-  const texteGeo = lieu;
-  // focus.point (Paris = départ) : privilégie le résultat le plus proche pour
-  // lever les ambiguïtés de noms (ex. Houdan Yvelines vs Houdan Guadeloupe),
-  // sans empêcher les destinations lointaines légitimes.
-  const url = `https://api.openrouteservice.org/geocode/search?api_key=${apiKey}&text=${encodeURIComponent(texteGeo)}&size=5&layers=locality,address,street&focus.point.lon=2.3522&focus.point.lat=48.8566`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('Géocodage impossible pour "' + lieu + '"');
-  const d = await r.json();
-  if (!d.features || d.features.length === 0) throw new Error('Adresse introuvable : "' + lieu + '"');
-  const europeens = d.features.filter(isEurope);
-  if (!europeens.length) throw new Error('Adresse introuvable en Europe : "' + lieu + '"');
-  // France d'abord (sans exclure le reste de l'Europe si aucun résultat français).
-  return frenchFirst(europeens)[0].geometry.coordinates;
+  const results = await searchPlaces(lieu, 5);
+  if (!results.length) throw new Error('Adresse introuvable en Europe : "' + lieu + '"');
+  const f = results[0];
+  return [f.lng, f.lat];
 }
 
 async function getRoute(coords, apiKey) {
@@ -1802,7 +2259,7 @@ function fmtEur(n) { return n.toLocaleString('fr-FR', {minimumFractionDigits:2, 
 function fmtL(n)   { return n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' L'; }
 
 // --- Bascule Aller simple / Aller-retour dans le tableau de résultats ---
-let resultMode = 'ar'; // 'simple' | 'ar'
+let resultMode = 'simple'; // 'simple' | 'ar'
 let lastResultData = null;
 
 function setResultMode(mode) {
@@ -1835,11 +2292,6 @@ function renderResultMode() {
     note.textContent = fmtEur(coutAffiche / d.passagers) + ' / pers.';
     rCout.appendChild(note);
   }
-
-  const callout = document.getElementById('costCallout');
-  callout.innerHTML = isAR
-    ? 'Aller simple : <strong>' + fmtEur(d.coutA) + '</strong> · ' + fmtL(d.litresA)
-    : 'Aller-retour : <strong>' + fmtEur(d.coutA * 2) + '</strong> · ' + fmtL(d.litresA * 2);
 }
 
 async function calculer() {
@@ -1861,7 +2313,7 @@ async function calculer() {
 
   try {
     // Géocode tous les points dans l'ordre : départ, étapes…, destination.
-    const coords = await Promise.all(lieux.map(l => geocode(l, apiKey)));
+    const coords = await Promise.all(lieux.map(l => geocode(l)));
     const c1 = coords[0], c2 = coords[coords.length - 1];
     const route = await getRoute(coords, apiKey);
     // ORS renvoie déjà la distance/durée totale cumulée sur tous les tronçons.
@@ -1895,51 +2347,8 @@ async function calculer() {
 
     // Station la moins chère à proximité du départ (best-effort, ne bloque rien).
     const carburantType = document.getElementById('carburant').value;
-    const cheapestNote = document.getElementById('cheapestNote');
-    const station = await fetchStationMoinsChere(c1[1], c1[0], carburantType);
-    if (station) {
-      cheapestNote.textContent = '';
-
-const header = document.createElement('div');
-header.className = 'cheapest-header';
-const icon = document.createElement('span');
-icon.className = 'cheapest-icon';
-icon.textContent = '🐀';
-header.appendChild(icon);
-const title = document.createElement('span');
-title.className = 'cheapest-title';
-title.style.fontSize = '0.9em';
-title.textContent = 'Station la moins chère près du départ';
-header.appendChild(title);
-
-cheapestNote.appendChild(header);
-
-      const detail = document.createElement('div');
-      detail.className = 'cheapest-detail';
-      const strong = document.createElement('strong');
-      strong.textContent = station.prix.toFixed(3) + ' €/L';
-      detail.appendChild(strong);
-      const lieu = [station.nom, station.ville].filter(Boolean).join(', ');
-      if (lieu) detail.appendChild(document.createTextNode(' à ' + lieu));
-      if (station.lat !== null && station.lon !== null) {
-        const dKm = distKm(c1[1], c1[0], station.lat, station.lon);
-        if (isFinite(dKm)) detail.appendChild(document.createTextNode(' (' + dKm.toFixed(1) + ' km)'));
-      }
-      cheapestNote.appendChild(detail);
-
-      if (station.lat !== null && station.lon !== null) {
-        const link = document.createElement('a');
-        link.className = 'cheapest-link';
-        link.href = `https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${station.lat},${station.lon}`;
-        link.target = '_blank';
-        link.textContent = 'Aller à cette station →';
-        cheapestNote.appendChild(link);
-      }
-
-      cheapestNote.style.display = 'block';
-    } else {
-      cheapestNote.style.display = 'none';
-    }
+    lastStationSearch = { lat: c1[1], lon: c1[0], type: carburantType, rayon: STATION_RAYON_KM, depart, arrivee };
+    await rechercherStationMoinsChere();
 
     document.getElementById('sectionResultats').style.display = 'block';
     document.getElementById('sectionResultats').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1954,4 +2363,3 @@ document.addEventListener('keydown', e => { if (e.key === 'Enter') calculer(); }
 </script>
 </body>
 </html>
-
