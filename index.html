@@ -73,22 +73,6 @@
       margin-bottom: 14px;
     }
 
-    /* Légende */
-    .legende {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #607080;
-    }
-    .legend-dot {
-      width: 12px; height: 12px;
-      border-radius: 3px;
-      background: #c6f5c6;
-      border: 1.5px solid #4caf50;
-      flex-shrink: 0;
-    }
-
     /* Lignes de paramètres */
     .param-row {
       display: flex;
@@ -165,16 +149,6 @@
     .section-carburant input[type="text"]:focus, .section-carburant input[type="number"]:focus, .section-carburant select:focus {
       border-color: #c9760a;
       box-shadow: 0 0 0 3px rgba(226,151,26,0.22);
-    }
-
-    .auto-field {
-      width: 100%;
-      padding: 8px 11px;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 10px;
-      background: #f5f7fa;
-      font-size: 13px;
-      color: #607080;
     }
 
     /* Prix moyen actuel : une ligne, alignée avec le champ Carburant */
@@ -662,6 +636,19 @@
     .res-value-big { font-size: 29px; font-weight: 900; color: #1565c0; }
     #r-litres.res-value-big { font-size: 22px; color: #1a2433; }
 
+    /* Détail carburant/péages, en petit au-dessus du coût total. */
+    .cost-chips-row { display: flex; gap: 8px; padding: 10px 0 8px; }
+    .cost-chip {
+      display: flex; flex-direction: column; align-items: center; gap: 1px;
+      background: #f5f8fb; border: 1px solid #dbe7f5; border-radius: 12px;
+      padding: 6px 10px; flex: 1; text-align: center;
+    }
+    .cost-chip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #90a4ae; }
+    .cost-chip-value { font-size: 14px; font-weight: 800; color: #1a2433; }
+    .cost-chip-peage .cost-chip-value { color: #2e7d32; }
+    .cost-chip-peage.unavailable .cost-chip-value { font-size: 10.5px; font-weight: 700; color: #90a4ae; line-height: 1.3; }
+    .cost-chip-peage .cost-chip-value a { color: inherit; text-decoration: underline; }
+
     /* Bascule Aller simple / Aller-retour : remplace les deux colonnes du
        tableau par une seule valeur, qu'on peut basculer d'un mode à
        l'autre (seul le coût carburant garde un rappel de l'autre mode). */
@@ -761,28 +748,6 @@
       z-index: 40;
     }
     .pass-max-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* Message péage indisponible (occupe les 2 colonnes de la ligne Péages) */
-    .res-table td.peage-msg {
-      border-right: 1px solid #dbe3ec;
-      font-size: 12px;
-      font-weight: 600;
-      font-style: italic;
-      color: #1976d2;
-    }
-    /* Espace en bas de la cellule péage pour loger la note quota sans
-       décaler le prix (qui reste centré verticalement comme l'aller-retour). */
-    #r-peage-a, #r-peage-ar { position: relative; padding-bottom: 14px; }
-    /* Note discrète du quota TollGuru, juste sous le prix (centré) */
-    .quota-note {
-      position: absolute;
-      left: 0; right: 0;
-      top: calc(50% + 4px);
-      line-height: 1;
-      font-size: 9px;
-      font-weight: 400;
-      color: #aab4bf;
-    }
 
     /* Bordure animée "chasing shine" + halo pulsé, pour mettre en valeur
        la station la moins chère. Dégrade proprement (bordure verte fixe)
@@ -900,6 +865,37 @@
       accent-color: #1976d2;
       cursor: pointer;
     }
+    .cheapest-btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .cheapest-mode-btn, .cheapest-nolimit-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      color: #ffffff;
+      cursor: pointer;
+      transition: filter 0.15s;
+    }
+    .cheapest-mode-btn:hover, .cheapest-nolimit-btn:hover { filter: brightness(1.08); }
+    .cheapest-mode-btn.mode-plus-chere { background: #d32f2f; }
+    .cheapest-mode-btn.mode-moins-chere { background: #2e7d32; }
+    .cheapest-nolimit-btn { background: #1976d2; }
+    /* Résultat "pas de limites" (France entière) : même mise en avant que le
+       coût total du trajet, pour qu'un prix isolé se voie au premier regard. */
+    .cheapest-detail-big {
+      font-size: 22px;
+      font-weight: 900;
+      color: #1565c0;
+      margin: 4px 0 8px;
+    }
+    .cheapest-detail-big strong { color: inherit; font-size: inherit; }
 
     .maps-wrap {
       text-align: center;
@@ -947,7 +943,7 @@
   <input type="hidden" id="apiKey" value="eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImY1NjRiM2M4Yjc0OTQ0ZDlhNmNjM2FiOWQzNjFhNTE2IiwiaCI6Im11cm11cjY0In0=">
 
   <!-- Bascule Coût carburant (trajet) / Station la moins chère (près de moi) -->
-  <div class="main-toggle" id="mainToggle">
+  <div class="main-toggle">
     <button type="button" class="main-toggle-btn active" data-main-mode="cout" onclick="setMainMode('cout')">Coût carburant</button>
     <button type="button" class="main-toggle-btn" data-main-mode="station" onclick="setMainMode('station')">Station la moins chère</button>
   </div>
@@ -977,12 +973,13 @@
       <div class="param-icon">⛽</div>
       <div class="param-label">Carburant</div>
       <div class="param-input">
-        <select id="carburant" onchange="resetResultat(); chargerPrix();">
+        <select id="carburant" onchange="resetResultat(); chargerPrix(); majUniteConso();">
           <option value="sp95">Sans plomb 95</option>
           <option value="sp98">Sans plomb 98</option>
           <option value="gazole">Gazole (Diesel)</option>
           <option value="e85">Superéthanol E85</option>
           <option value="gplc">GPLc</option>
+          <option value="electrique">Électrique</option>
         </select>
         <div class="prix-actuel">Prix moyen actuel : <span id="prixAffiche">Chargement…</span></div>
       </div>
@@ -999,7 +996,7 @@
             <div class="roulette-center"></div>
           </div>
           <button type="button" class="conso-arrow" id="consoMinus" aria-label="Diminuer la consommation">−</button>
-          <div class="conso-value"><input type="text" id="consoVal" class="conso-val-input" value="7,5" inputmode="decimal" readonly aria-label="Consommation au 100 km, modifiable"> <span class="roulette-unit">L / 100 km</span></div>
+          <div class="conso-value"><input type="text" id="consoVal" class="conso-val-input" value="7,5" inputmode="decimal" readonly aria-label="Consommation au 100 km, modifiable"> <span class="roulette-unit" id="consoUnitLabel">L / 100 km</span></div>
           <button type="button" class="conso-arrow" id="consoPlus" aria-label="Augmenter la consommation">+</button>
         </div>
       </div>
@@ -1027,7 +1024,7 @@
   <!-- Résultats -->
   <div class="card resultats" id="sectionResultats" style="margin-top:14px;">
     <div class="card-title">Résultats</div>
-    <div class="ar-toggle" id="arToggle">
+    <div class="ar-toggle">
       <button type="button" class="ar-toggle-btn active" data-mode="simple" onclick="setResultMode('simple')">Aller simple</button>
       <button type="button" class="ar-toggle-btn" data-mode="ar" onclick="setResultMode('ar')">Aller-retour</button>
     </div>
@@ -1035,12 +1032,22 @@
 
     <div class="res-section-title">Coût & conso</div>
     <div class="section res-section">
+      <div class="cost-chips-row">
+        <div class="cost-chip">
+          <span class="cost-chip-label">Carburant</span>
+          <span class="cost-chip-value" id="r-cout-carburant">—</span>
+        </div>
+        <div class="cost-chip cost-chip-peage" id="costChipPeage">
+          <span class="cost-chip-label">Péages</span>
+          <span class="cost-chip-value" id="r-cout-peage">—</span>
+        </div>
+      </div>
       <div class="res-row">
-        <span class="res-label">Coût carburant</span>
+        <span class="res-label">Coût total</span>
         <span class="res-value res-value-big" id="r-cout">—</span>
       </div>
       <div class="res-row">
-        <span class="res-label">Litres consommés</span>
+        <span class="res-label" id="r-litres-label">Litres consommés</span>
         <span class="res-value res-value-big" id="r-litres">—</span>
       </div>
     </div>
@@ -1054,6 +1061,11 @@
        style="width:220px !important;height:38px;display:flex;align-items:center;justify-content:center;gap:8px;background:#eef7ee;color:#2e7d32;box-sizing:border-box;">
         <img src="logo prix peages.png" alt="" style="width:18px;height:18px;object-fit:contain;">
         Voir le prix des péages
+    </a>
+    <a class="maps-link" id="wazeLink" href="#" target="_blank"
+       style="width:220px !important;height:38px;display:flex;align-items:center;justify-content:center;gap:8px;background:#eaf3ff;color:#1976d2;box-sizing:border-box;">
+        <img src="logo waze.png" alt="" style="width:26px;height:26px;object-fit:contain;">
+        Y aller avec Waze
     </a>
 </div>
     <div class="cheapest-note" id="cheapestNote" style="display:none;"></div>
@@ -1074,7 +1086,7 @@
               <input type="text" id="stationAdresse" class="point-input" autocomplete="off" placeholder="Ton adresse" oninput="onStationAdresseInput(this)" onfocus="showFavoritesIfEmpty(this)">
               <div class="autocomplete-list"></div>
             </div>
-            <button type="button" class="fav-star" id="stationFavStar" title="Enregistrer en favori" onclick="toggleFavPlace(document.getElementById('stationAdresse').value, this)">☆</button>
+            <button type="button" class="fav-star" title="Enregistrer en favori" onclick="toggleFavPlace(document.getElementById('stationAdresse').value, this)">☆</button>
           </div>
         </div>
         <button type="button" class="link-btn" onclick="utiliserPositionActuelle()"> Utiliser ma position actuelle</button>
@@ -1092,6 +1104,7 @@
               <option value="gazole">Gazole (Diesel)</option>
               <option value="e85">Superéthanol E85</option>
               <option value="gplc">GPLc</option>
+              <option value="electrique">Électrique</option>
             </select>
           </div>
         </div>
@@ -1137,6 +1150,17 @@ function photonLabel(p) {
   return parts.filter(Boolean).join(', ');
 }
 
+// Extrait le nom du département depuis le "context" BAN, ex. "21, Côte-d'Or,
+// Bourgogne-Franche-Comté" -> "Côte-d'Or". Sert à désambiguïser les
+// homonymes (plusieurs communes portent le même nom dans des départements
+// différents), affiché seulement dans la liste — jamais injecté dans la
+// valeur du champ (qui doit rester une adresse géocodable telle quelle).
+function banDept(properties) {
+  if (!properties || !properties.context) return null;
+  const parts = properties.context.split(',').map(s => s.trim());
+  return parts[1] || null;
+}
+
 // Recherche de lieux : API Adresse officielle (BAN, data.gouv.fr) en priorité
 // pour la France — exhaustive et bien priorisée sur les adresses françaises
 // (jusqu'au numéro de rue), gratuite et sans clé — complétée par Photon
@@ -1148,16 +1172,30 @@ async function searchPlaces(q, limit) {
     fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=${limit}&lang=fr`)
       .then(r => r.ok ? r.json() : { features: [] }).catch(() => ({ features: [] })),
   ]);
-  const ban = (banRes.features || []).map(f => ({
-    label: f.properties.label,
-    lat: f.geometry.coordinates[1],
-    lng: f.geometry.coordinates[0],
-    city: f.properties.city || f.properties.name,
-  }));
+  let banFeatures = banRes.features || [];
+  // Saisie sans numéro = on cherche vraisemblablement une ville/un lieu, pas
+  // une rue précise : on écarte les rues/numéros homonymes d'ailleurs en
+  // France (ex. taper "dijon" ne doit pas remonter "Rue de Dijon" à Nice),
+  // sauf si ça ne laisse plus aucun résultat (repli sur la liste complète).
+  if (!/\d/.test(q)) {
+    const lieux = banFeatures.filter(f => f.properties.type === 'municipality' || f.properties.type === 'locality');
+    if (lieux.length) banFeatures = lieux;
+  }
+  const ban = banFeatures.map(f => {
+    const dept = banDept(f.properties);
+    return {
+      label: f.properties.label,
+      displayLabel: dept ? `${f.properties.label} (${dept})` : f.properties.label,
+      lat: f.geometry.coordinates[1],
+      lng: f.geometry.coordinates[0],
+      city: f.properties.city || f.properties.name,
+    };
+  });
   const photon = (photonRes.features || [])
     .filter(f => isEuropePhoton(f) && f.properties.countrycode !== 'FR')
     .map(f => ({
       label: photonLabel(f.properties),
+      displayLabel: photonLabel(f.properties),
       lat: f.geometry.coordinates[1],
       lng: f.geometry.coordinates[0],
       city: f.properties.city || f.properties.name,
@@ -1273,7 +1311,7 @@ async function onAutoComplete(input) {
         vus.add(cle);
         const div = document.createElement('div');
         div.className = 'autocomplete-item';
-        div.textContent = f.label;
+        div.textContent = f.displayLabel || f.label;
         div.addEventListener('mousedown', e => {
           e.preventDefault();
           input.value = f.label;
@@ -1300,7 +1338,35 @@ const CARB_FIELD = {
   gazole:'gazole_prix', sp95:'sp95_prix', sp98:'sp98_prix',
   e10:'e10_prix', e85:'e85_prix', gplc:'gplc_prix'
 };
+// Pas de suivi temps réel du prix de l'électricité (l'API data.gouv ne
+// couvre que les carburants vendus en station) : estimation fixe basée sur
+// le tarif réglementé (heures pleines), à défaut de mieux.
+const PRIX_ELECTRIQUE_ESTIME = 0.2516;
 let prixActuel = null;
+
+// Met à jour l'unité affichée (L ou kWh) selon le carburant choisi, et
+// préremplit une consommation moyenne plausible au changement de "famille"
+// (électrique <-> thermique), sans écraser une valeur déjà ajustée si on
+// reste dans la même famille.
+const CONSO_ELECTRIQUE_DEFAUT = 17;
+const CONSO_THERMIQUE_DEFAUT = 7.5;
+let carburantTypePrecedent = null;
+function majUniteConso() {
+  const type = document.getElementById('carburant').value;
+  const electrique = type === 'electrique';
+  const unitLabel = document.getElementById('consoUnitLabel');
+  if (unitLabel) unitLabel.textContent = electrique ? 'kWh / 100 km' : 'L / 100 km';
+  const roulette = document.getElementById('consoRoulette');
+  if (roulette) roulette.setAttribute('aria-label', electrique ? 'Consommation électrique au 100 km' : 'Consommation au 100 km');
+
+  const etaitElectrique = carburantTypePrecedent === 'electrique';
+  if (electrique && !etaitElectrique) {
+    consoSet(CONSO_ELECTRIQUE_DEFAUT, true);
+  } else if (!electrique && etaitElectrique) {
+    consoSet(CONSO_THERMIQUE_DEFAUT, true);
+  }
+  carburantTypePrecedent = type;
+}
 
 function showError(msg) { const e=document.getElementById('error'); e.textContent=msg; e.style.display='block'; }
 function hideError() { document.getElementById('error').style.display='none'; }
@@ -1576,6 +1642,12 @@ async function chargerPrix() {
   const type = document.getElementById('carburant').value;
   document.getElementById('prixAffiche').textContent = 'Chargement…';
   prixActuel = null;
+  if (type === 'electrique') {
+    // Pas de donnée temps réel disponible : estimation fixe (tarif réglementé).
+    prixActuel = PRIX_ELECTRIQUE_ESTIME;
+    document.getElementById('prixAffiche').textContent = prixActuel.toFixed(4) + ' €/kWh (estimation)';
+    return;
+  }
   try {
     let prix;
     if (type === 'sp95') {
@@ -1595,6 +1667,7 @@ async function chargerPrix() {
   }
 }
 chargerPrix();
+majUniteConso();
 
 // Distance à vol d'oiseau (km), pour situer la station la moins chère trouvée.
 function distKm(lat1, lon1, lat2, lon2) {
@@ -1633,23 +1706,48 @@ function buildStationMap(lat, lon) {
 // Le rayon peut être élargi via un curseur depuis l'encadré résultat, sans
 // relancer tout le calcul du trajet.
 const STATION_RAYON_KM = 8;
-const STATION_RAYON_MIN = 5;
-const STATION_RAYON_MAX = 50;
-async function fetchStationMoinsChere(lat, lon, type, rayonKm) {
+const STATION_RAYON_MIN = 1;
+const STATION_RAYON_MAX = 100;
+// Rayon spécial "pas de limites" (recherche sur toute la France), même
+// convention que les radiuses -1 d'OpenRouteService plus bas dans ce fichier.
+const STATION_RAYON_ILLIMITE = -1;
+
+// Récupère TOUS les enregistrements d'une recherche opendatasoft v1 (l'API
+// plafonne chaque appel à ODS_PAGE_SIZE résultats) en paginant avec "start"
+// jusqu'à épuisement, avec un garde-fou sur le nombre de pages.
+const ODS_PAGE_SIZE = 1000;
+const ODS_MAX_PAGES = 20; // jusqu'à 20 000 enregistrements, largement au-delà du nombre de stations en France.
+async function fetchAllODSRecords(baseUrl) {
+  const records = [];
+  for (let page = 0; page < ODS_MAX_PAGES; page++) {
+    const r = await fetch(`${baseUrl}&rows=${ODS_PAGE_SIZE}&start=${page * ODS_PAGE_SIZE}`);
+    if (!r.ok) break;
+    const d = await r.json();
+    if (!d.records || !d.records.length) break;
+    records.push(...d.records);
+    if (d.records.length < ODS_PAGE_SIZE || records.length >= d.nhits) break;
+  }
+  return records;
+}
+
+// mode: 'min' (station la moins chère, par défaut) ou 'max' (la plus chère).
+async function fetchStationMoinsChere(lat, lon, type, rayonKm, mode) {
   rayonKm = rayonKm || STATION_RAYON_KM;
+  const illimite = rayonKm === STATION_RAYON_ILLIMITE;
   const field = (type === 'sp95') ? 'e10_prix' : CARB_FIELD[type];
   if (!field) return null;
   try {
     // Le tri "sort" de l'API porte sur un champ texte : il n'est pas fiable pour
     // classer les prix numériquement (ex. "1.9" avant "1.85"). On récupère donc
-    // toutes les stations du rayon et on calcule nous-mêmes le minimum.
-    const url = `https://data.economie.gouv.fr/api/records/1.0/search/?dataset=prix-des-carburants-en-france-flux-instantane-v2&geofilter.distance=${lat},${lon},${rayonKm * 1000}&rows=100`;
-    const r = await fetch(url);
-    if (!r.ok) return null;
-    const d = await r.json();
-    if (!d.records || !d.records.length) return null;
+    // toutes les stations du rayon (paginé) et on calcule nous-mêmes le minimum/maximum.
+    // "Pas de limites" : pas de filtre géographique, on cherche sur toute la France.
+    const url = `https://data.economie.gouv.fr/api/records/1.0/search/?dataset=prix-des-carburants-en-france-flux-instantane-v2`
+      + (illimite ? '' : `&geofilter.distance=${lat},${lon},${rayonKm * 1000}`);
+    const records = await fetchAllODSRecords(url);
+    if (!records.length) return null;
+    const veutMax = mode === 'max';
     let best = null;
-    for (const rec of d.records) {
+    for (const rec of records) {
       const f = rec.fields || {};
       const prix = parseFloat(f[field]);
       if (isNaN(prix) || prix <= 0) continue;
@@ -1657,24 +1755,99 @@ async function fetchStationMoinsChere(lat, lon, type, rayonKm) {
       const sLat = geo ? geo[1] : (f.latitude !== undefined ? parseFloat(f.latitude) : null);
       const sLon = geo ? geo[0] : (f.longitude !== undefined ? parseFloat(f.longitude) : null);
       // Filtre client en plus du rayon serveur (sécurité si l'API renvoie plus large).
-      if (sLat !== null && sLon !== null && distKm(lat, lon, sLat, sLon) > rayonKm) continue;
-      if (!best || prix < best.prix) best = { prix, nom: f.nom || '', ville: f.ville || '', lat: sLat, lon: sLon };
+      if (!illimite && sLat !== null && sLon !== null && distKm(lat, lon, sLat, sLon) > rayonKm) continue;
+      if (!best || (veutMax ? prix > best.prix : prix < best.prix)) best = { prix, nom: f.nom || '', ville: f.ville || '', lat: sLat, lon: sLon };
     }
     return best;
   } catch (e) { return null; }
 }
 
+// Borne de recharge la plus proche (véhicule électrique) : pas de prix
+// comparable d'une borne à l'autre (tarification très variable, souvent
+// absente des données), donc on cherche la plus proche plutôt que la
+// moins chère. Source : base nationale IRVE (Infrastructures de Recharge
+// pour Véhicules Électriques, ODRE/data.gouv.fr), gratuite, sans clé.
+async function fetchBorneRecharge(lat, lon, rayonKm) {
+  rayonKm = rayonKm || STATION_RAYON_KM;
+  try {
+    const url = `https://odre.opendatasoft.com/api/records/1.0/search/?dataset=bornes-irve&geofilter.distance=${lat},${lon},${rayonKm * 1000}`;
+    const records = await fetchAllODSRecords(url);
+    if (!records.length) return null;
+    let best = null, bestDist = Infinity;
+    for (const rec of records) {
+      const f = rec.fields || {};
+      const geo = rec.geometry && rec.geometry.coordinates; // [lon, lat]
+      const sLat = geo ? geo[1] : (f.consolidated_latitude !== undefined ? parseFloat(f.consolidated_latitude) : (f.ylatitude !== undefined ? parseFloat(f.ylatitude) : null));
+      const sLon = geo ? geo[0] : (f.consolidated_longitude !== undefined ? parseFloat(f.consolidated_longitude) : (f.xlongitude !== undefined ? parseFloat(f.xlongitude) : null));
+      if (sLat === null || sLon === null || isNaN(sLat) || isNaN(sLon)) continue;
+      const dist = distKm(lat, lon, sLat, sLon);
+      if (!isFinite(dist) || dist > rayonKm) continue;
+      if (dist < bestDist) {
+        bestDist = dist;
+        const puissance = parseFloat(f.puissance_nominale);
+        best = {
+          nom: f.nom_station || f.nom_enseigne || '',
+          operateur: f.nom_operateur || f.nom_amenageur || '',
+          ville: f.consolidated_commune || '',
+          puissance: isNaN(puissance) ? null : puissance,
+          gratuit: f.gratuit === true || f.gratuit === 'true' || f.gratuit === 'oui',
+          lat: sLat, lon: sLon,
+        };
+      }
+    }
+    return best;
+  } catch (e) { return null; }
+}
+
+// Choisit la bonne recherche (station essence/gasoil ou borne électrique)
+// selon le carburant sélectionné. Le mode min/max est ignoré pour les bornes
+// électriques (pas de prix comparable, cf. fetchBorneRecharge).
+function fetchStationOuBorne(lat, lon, type, rayonKm, mode) {
+  return type === 'electrique' ? fetchBorneRecharge(lat, lon, rayonKm) : fetchStationMoinsChere(lat, lon, type, rayonKm, mode);
+}
+
+// Construit la ligne de détail (prix carburant, ou puissance/opérateur pour
+// une borne électrique), commune aux deux encadrés "station la moins chère".
+// big : mise en avant (recherche "pas de limites"), même traitement visuel
+// que le coût total du trajet.
+function buildStationDetail(station, type, lat, lon, big) {
+  const detail = document.createElement('div');
+  detail.className = big ? 'cheapest-detail cheapest-detail-big' : 'cheapest-detail';
+  if (type === 'electrique') {
+    const strong = document.createElement('strong');
+    strong.textContent = station.puissance ? station.puissance + ' kW' : 'Borne de recharge';
+    detail.appendChild(strong);
+    const nomOp = [station.operateur, station.nom].filter(Boolean).join(' – ');
+    if (nomOp) detail.appendChild(document.createTextNode(' ' + nomOp));
+    if (station.ville) detail.appendChild(document.createTextNode((nomOp ? ', ' : ' ') + station.ville));
+    if (station.gratuit) detail.appendChild(document.createTextNode(' · gratuite'));
+  } else {
+    const strong = document.createElement('strong');
+    strong.textContent = station.prix.toFixed(3) + ' €/L';
+    detail.appendChild(strong);
+    const lieu = [station.nom, station.ville].filter(Boolean).join(', ');
+    if (lieu) detail.appendChild(document.createTextNode(' à ' + lieu));
+  }
+  if (station.lat !== null && station.lon !== null) {
+    const dKm = distKm(lat, lon, station.lat, station.lon);
+    if (isFinite(dKm)) detail.appendChild(document.createTextNode(' (' + dKm.toFixed(1) + ' km)'));
+  }
+  return detail;
+}
+
 // Recherche + affichage de la station la moins chère, indépendants du reste
 // du calcul du trajet : le curseur de rayon ne relance que cet encadré, et
 // seulement au relâchement (évite un fetch à chaque pixel glissé).
-let lastStationSearch = null; // { lat, lon, type, rayon, depart, arrivee }
+let lastStationSearch = null; // { lat, lon, type, rayon, depart, arrivee, rayonAvantIllimite }
 
 async function rechercherStationMoinsChere() {
   const cheapestNote = document.getElementById('cheapestNote');
   if (!lastStationSearch) { cheapestNote.style.display = 'none'; return; }
   const { lat, lon, type, rayon, depart, arrivee } = lastStationSearch;
+  const electrique = type === 'electrique';
+  const illimite = rayon === STATION_RAYON_ILLIMITE;
   cheapestNote.classList.add('loading');
-  const station = await fetchStationMoinsChere(lat, lon, type, rayon);
+  const station = await fetchStationOuBorne(lat, lon, type, rayon);
   cheapestNote.classList.remove('loading');
   cheapestNote.textContent = '';
   cheapestNote.style.display = 'block';
@@ -1688,23 +1861,14 @@ async function rechercherStationMoinsChere() {
   const title = document.createElement('span');
   title.className = 'cheapest-title';
   title.style.fontSize = '0.9em';
-  title.textContent = 'Station la moins chère près du départ';
+  title.textContent = electrique
+    ? 'Borne de recharge la plus proche du départ'
+    : (illimite ? 'Station la moins chère de France' : 'Station la moins chère près du départ');
   header.appendChild(title);
   cheapestNote.appendChild(header);
 
   if (station) {
-    const detail = document.createElement('div');
-    detail.className = 'cheapest-detail';
-    const strong = document.createElement('strong');
-    strong.textContent = station.prix.toFixed(3) + ' €/L';
-    detail.appendChild(strong);
-    const lieu = [station.nom, station.ville].filter(Boolean).join(', ');
-    if (lieu) detail.appendChild(document.createTextNode(' à ' + lieu));
-    if (station.lat !== null && station.lon !== null) {
-      const dKm = distKm(lat, lon, station.lat, station.lon);
-      if (isFinite(dKm)) detail.appendChild(document.createTextNode(' (' + dKm.toFixed(1) + ' km)'));
-    }
-    cheapestNote.appendChild(detail);
+    cheapestNote.appendChild(buildStationDetail(station, type, lat, lon, illimite));
 
     if (station.lat !== null && station.lon !== null) {
       cheapestNote.appendChild(buildStationMap(station.lat, station.lon));
@@ -1715,14 +1879,34 @@ async function rechercherStationMoinsChere() {
       const destination = encodeURIComponent(arrivee || `${station.lat},${station.lon}`);
       link.href = `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${origin}&destination=${destination}&waypoints=${station.lat},${station.lon}`;
       link.target = '_blank';
-      link.textContent = 'Ajouter cette station à mon trajet';
+      link.textContent = electrique ? 'Ajouter cette borne à mon trajet' : 'Ajouter cette station à mon trajet';
       cheapestNote.appendChild(link);
     }
   } else {
     const empty = document.createElement('div');
     empty.className = 'cheapest-empty';
-    empty.textContent = 'Aucune station trouvée dans un rayon de ' + rayon + ' km.';
+    empty.textContent = illimite
+      ? (electrique ? 'Aucune borne trouvée.' : 'Aucune station trouvée.')
+      : (electrique ? 'Aucune borne trouvée' : 'Aucune station trouvée') + ' dans un rayon de ' + rayon + ' km.';
     cheapestNote.appendChild(empty);
+  }
+
+  if (illimite) {
+    // Retour à un rayon limité : on réutilise le dernier rayon connu avant la
+    // bascule "pas de limites" (ou le rayon par défaut si on ne l'a pas).
+    const backRow = document.createElement('div');
+    backRow.className = 'cheapest-btn-row';
+    const backBtn = document.createElement('button');
+    backBtn.type = 'button';
+    backBtn.className = 'cheapest-nolimit-btn';
+    backBtn.textContent = 'Revenir à un rayon limité';
+    backBtn.onclick = () => {
+      lastStationSearch.rayon = lastStationSearch.rayonAvantIllimite || STATION_RAYON_KM;
+      rechercherStationMoinsChere();
+    };
+    backRow.appendChild(backBtn);
+    cheapestNote.appendChild(backRow);
+    return;
   }
 
   // Curseur pour élargir/réduire le rayon de recherche : recalcule uniquement
@@ -1740,7 +1924,7 @@ async function rechercherStationMoinsChere() {
   slider.max = STATION_RAYON_MAX;
   slider.step = 1;
   slider.value = rayon;
-  slider.setAttribute('aria-label', 'Rayon de recherche de la station la moins chère');
+  slider.setAttribute('aria-label', 'Rayon de recherche');
   slider.addEventListener('input', () => {
     document.getElementById('cheapestRadiusLabel').textContent = 'Rayon : ' + slider.value + ' km';
   });
@@ -1751,13 +1935,31 @@ async function rechercherStationMoinsChere() {
   radiusWrap.appendChild(label);
   radiusWrap.appendChild(slider);
   cheapestNote.appendChild(radiusWrap);
+
+  // "Pas de limites" : recherche la station la moins chère sur toute la
+  // France (n'a de sens que pour un carburant, pas pour les bornes).
+  if (!electrique) {
+    const btnRow = document.createElement('div');
+    btnRow.className = 'cheapest-btn-row';
+    const noLimitBtn = document.createElement('button');
+    noLimitBtn.type = 'button';
+    noLimitBtn.className = 'cheapest-nolimit-btn';
+    noLimitBtn.textContent = 'Pas de limites (France entière)';
+    noLimitBtn.onclick = () => {
+      lastStationSearch.rayonAvantIllimite = rayon;
+      lastStationSearch.rayon = STATION_RAYON_ILLIMITE;
+      rechercherStationMoinsChere();
+    };
+    btnRow.appendChild(noLimitBtn);
+    cheapestNote.appendChild(btnRow);
+  }
 }
 
 // --- Station la moins chère près de chez moi, recherche indépendante d'un
 // trajet (onglet dédié) : même logique de recherche/curseur que ci-dessus,
 // mais son propre état et ses propres éléments (IDs distincts). ---
 let stationGeoCoords = null; // [lon, lat] fixé par géolocalisation, invalidé dès que l'adresse est modifiée à la main
-let lastStationSearchStandalone = null; // { lat, lon, type, rayon }
+let lastStationSearchStandalone = null; // { lat, lon, type, rayon, mode: 'min'|'max' }
 
 function onStationAdresseInput(el) {
   stationGeoCoords = null;
@@ -1800,7 +2002,7 @@ async function rechercherStationStandalone() {
   document.getElementById('cheapestNoteStation').style.display = 'none';
   try {
     const coords = stationGeoCoords || await geocode(adresse);
-    lastStationSearchStandalone = { lat: coords[1], lon: coords[0], type, rayon: STATION_RAYON_KM };
+    lastStationSearchStandalone = { lat: coords[1], lon: coords[0], type, rayon: STATION_RAYON_KM, mode: 'min' };
     await afficherStationStandalone();
   } catch(e) {
     showStationError('⚠️ ' + (e.message || 'Erreur inconnue.'));
@@ -1812,9 +2014,12 @@ async function rechercherStationStandalone() {
 async function afficherStationStandalone() {
   const cheapestNote = document.getElementById('cheapestNoteStation');
   if (!lastStationSearchStandalone) { cheapestNote.style.display = 'none'; return; }
-  const { lat, lon, type, rayon } = lastStationSearchStandalone;
+  const { lat, lon, type, rayon, mode } = lastStationSearchStandalone;
+  const electrique = type === 'electrique';
+  const veutMax = mode === 'max';
+  const illimite = rayon === STATION_RAYON_ILLIMITE;
   cheapestNote.classList.add('loading');
-  const station = await fetchStationMoinsChere(lat, lon, type, rayon);
+  const station = await fetchStationOuBorne(lat, lon, type, rayon, mode);
   cheapestNote.classList.remove('loading');
   cheapestNote.textContent = '';
   cheapestNote.style.display = 'block';
@@ -1828,23 +2033,16 @@ async function afficherStationStandalone() {
   const title = document.createElement('span');
   title.className = 'cheapest-title';
   title.style.fontSize = '0.9em';
-  title.textContent = 'Station la moins chère trouvée';
+  title.textContent = electrique
+    ? 'Borne de recharge trouvée'
+    : (illimite
+        ? (veutMax ? 'Station la plus chère de France' : 'Station la moins chère de France')
+        : (veutMax ? 'Station la plus chère trouvée' : 'Station la moins chère trouvée'));
   header.appendChild(title);
   cheapestNote.appendChild(header);
 
   if (station) {
-    const detail = document.createElement('div');
-    detail.className = 'cheapest-detail';
-    const strong = document.createElement('strong');
-    strong.textContent = station.prix.toFixed(3) + ' €/L';
-    detail.appendChild(strong);
-    const lieu = [station.nom, station.ville].filter(Boolean).join(', ');
-    if (lieu) detail.appendChild(document.createTextNode(' à ' + lieu));
-    if (station.lat !== null && station.lon !== null) {
-      const dKm = distKm(lat, lon, station.lat, station.lon);
-      if (isFinite(dKm)) detail.appendChild(document.createTextNode(' (' + dKm.toFixed(1) + ' km)'));
-    }
-    cheapestNote.appendChild(detail);
+    cheapestNote.appendChild(buildStationDetail(station, type, lat, lon, illimite));
 
     if (station.lat !== null && station.lon !== null) {
       cheapestNote.appendChild(buildStationMap(station.lat, station.lon));
@@ -1853,14 +2051,51 @@ async function afficherStationStandalone() {
       link.className = 'cheapest-link';
       link.href = `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${lat},${lon}&destination=${station.lat},${station.lon}`;
       link.target = '_blank';
-      link.textContent = 'Itinéraire vers cette station';
+      const linkIcon = document.createElement('img');
+      linkIcon.src = 'logo fleche maps.png';
+      linkIcon.alt = '';
+      linkIcon.style.cssText = 'width:14px;height:14px;object-fit:contain;';
+      link.appendChild(linkIcon);
+      link.appendChild(document.createTextNode(electrique ? 'Itinéraire vers cette borne' : 'Itinéraire vers cette station'));
       cheapestNote.appendChild(link);
     }
   } else {
     const empty = document.createElement('div');
     empty.className = 'cheapest-empty';
-    empty.textContent = 'Aucune station trouvée dans un rayon de ' + rayon + ' km.';
+    empty.textContent = illimite
+      ? (electrique ? 'Aucune borne trouvée.' : 'Aucune station trouvée.')
+      : (electrique ? 'Aucune borne trouvée' : 'Aucune station trouvée') + ' dans un rayon de ' + rayon + ' km.';
     cheapestNote.appendChild(empty);
+  }
+
+  if (illimite) {
+    const backRow = document.createElement('div');
+    backRow.className = 'cheapest-btn-row';
+
+    if (!electrique) {
+      const modeBtn = document.createElement('button');
+      modeBtn.type = 'button';
+      modeBtn.className = 'cheapest-mode-btn ' + (veutMax ? 'mode-moins-chere' : 'mode-plus-chere');
+      modeBtn.textContent = veutMax ? 'Voir la station la moins chère' : 'Voir la station la plus chère';
+      modeBtn.onclick = () => {
+        lastStationSearchStandalone.mode = veutMax ? 'min' : 'max';
+        afficherStationStandalone();
+      };
+      backRow.appendChild(modeBtn);
+    }
+
+    const backBtn = document.createElement('button');
+    backBtn.type = 'button';
+    backBtn.className = 'cheapest-nolimit-btn';
+    backBtn.textContent = 'Revenir à un rayon limité';
+    backBtn.onclick = () => {
+      lastStationSearchStandalone.rayon = lastStationSearchStandalone.rayonAvantIllimite || STATION_RAYON_KM;
+      afficherStationStandalone();
+    };
+    backRow.appendChild(backBtn);
+
+    cheapestNote.appendChild(backRow);
+    return;
   }
 
   const radiusWrap = document.createElement('div');
@@ -1876,7 +2111,7 @@ async function afficherStationStandalone() {
   slider.max = STATION_RAYON_MAX;
   slider.step = 1;
   slider.value = rayon;
-  slider.setAttribute('aria-label', 'Rayon de recherche de la station la moins chère');
+  slider.setAttribute('aria-label', 'Rayon de recherche');
   slider.addEventListener('input', () => {
     document.getElementById('cheapestRadiusLabelStation').textContent = 'Rayon : ' + slider.value + ' km';
   });
@@ -1887,6 +2122,36 @@ async function afficherStationStandalone() {
   radiusWrap.appendChild(label);
   radiusWrap.appendChild(slider);
   cheapestNote.appendChild(radiusWrap);
+
+  // Bascule moins chère / plus chère (n'a de sens que pour un carburant, pas
+  // pour les bornes électriques) et "pas de limites" : côte à côte.
+  if (!electrique) {
+    const btnRow = document.createElement('div');
+    btnRow.className = 'cheapest-btn-row';
+
+    const modeBtn = document.createElement('button');
+    modeBtn.type = 'button';
+    modeBtn.className = 'cheapest-mode-btn ' + (veutMax ? 'mode-moins-chere' : 'mode-plus-chere');
+    modeBtn.textContent = veutMax ? 'Voir la station la moins chère' : 'Voir la station la plus chère';
+    modeBtn.onclick = () => {
+      lastStationSearchStandalone.mode = veutMax ? 'min' : 'max';
+      afficherStationStandalone();
+    };
+    btnRow.appendChild(modeBtn);
+
+    const noLimitBtn = document.createElement('button');
+    noLimitBtn.type = 'button';
+    noLimitBtn.className = 'cheapest-nolimit-btn';
+    noLimitBtn.textContent = 'Pas de limites (France entière)';
+    noLimitBtn.onclick = () => {
+      lastStationSearchStandalone.rayonAvantIllimite = rayon;
+      lastStationSearchStandalone.rayon = STATION_RAYON_ILLIMITE;
+      afficherStationStandalone();
+    };
+    btnRow.appendChild(noLimitBtn);
+
+    cheapestNote.appendChild(btnRow);
+  }
 }
 
 const DEPART_FIXE = '60 rue de Dantzig, Paris';
@@ -2148,12 +2413,12 @@ async function getRoute(coords, apiKey) {
   return { distanceKm: s.distance / 1000, dureeSec: s.duration, polyline };
 }
 
-// URL du relais Cloudflare Worker qui appelle TollGuru (contourne le blocage CORS).
+// URL du relais Cloudflare Worker qui appelle l'API Vinci (contourne le blocage CORS).
 // ⚠️ Colle ici l'URL de TON Worker, ex : https://peage.toncompte.workers.dev
 const TOLL_PROXY_URL = 'https://peage.jeanlorilleux37.workers.dev/';
 
-// Cache des péages (localStorage) : un trajet déjà calculé ne reconsomme pas
-// le quota TollGuru (plan gratuit = 15 calculs/jour).
+// Cache des péages (localStorage) : un trajet déjà calculé ne refait pas
+// les appels réseau vers l'API Vinci.
 function tollCacheKey(c1, c2) {
   const r = n => n.toFixed(4); // ~11 m de précision, suffisant pour identifier un trajet
   return 'toll:' + r(c1[1]) + ',' + r(c1[0]) + '>' + r(c2[1]) + ',' + r(c2[0]);
@@ -2166,86 +2431,108 @@ function tollCacheSet(key, cost) {
   try { localStorage.setItem(key, JSON.stringify(cost)); } catch(e) {}
 }
 
-// Suivi du quota TollGuru (15 requêtes / 24 h glissantes), estimé côté navigateur :
-// on horodate chaque appel réellement consommé (ni cache, ni refus quota).
-const TOLL_QUOTA_MAX = 15;
-const TOLL_QUOTA_WINDOW = 24 * 3600 * 1000;
-function tollQuotaCalls() {
-  let arr;
-  try { arr = JSON.parse(localStorage.getItem('tollQuotaCalls') || '[]'); } catch(e) { arr = []; }
-  const cutoff = Date.now() - TOLL_QUOTA_WINDOW;
-  arr = arr.filter(t => t > cutoff);
-  try { localStorage.setItem('tollQuotaCalls', JSON.stringify(arr)); } catch(e) {}
-  return arr;
+// Décodage/encodage polyline (algorithme Google), paramétrable en précision :
+// ORS nous donne du précision 5, l'API interne Vinci attend du précision 6.
+function decodePolyline(str, precision) {
+  const factor = Math.pow(10, precision || 5);
+  let index = 0, lat = 0, lng = 0;
+  const coordinates = [];
+  while (index < str.length) {
+    let shift = 0, result = 0, b;
+    do { b = str.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+    lat += (result & 1) ? ~(result >> 1) : (result >> 1);
+    shift = 0; result = 0;
+    do { b = str.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+    lng += (result & 1) ? ~(result >> 1) : (result >> 1);
+    coordinates.push([lat / factor, lng / factor]);
+  }
+  return coordinates;
 }
-function tollQuotaRemaining() {
-  return Math.max(0, TOLL_QUOTA_MAX - tollQuotaCalls().length);
-}
-function recordTollCall() {
-  const arr = tollQuotaCalls();
-  arr.push(Date.now());
-  try { localStorage.setItem('tollQuotaCalls', JSON.stringify(arr)); } catch(e) {}
+function encodePolyline(coords, precision) {
+  const factor = Math.pow(10, precision || 5);
+  const encodeNum = n => {
+    n = n < 0 ? ~(n << 1) : (n << 1);
+    let out = '';
+    while (n >= 0x20) { out += String.fromCharCode((0x20 | (n & 0x1f)) + 63); n >>= 5; }
+    return out + String.fromCharCode(n + 63);
+  };
+  let out = '', prevLat = 0, prevLng = 0;
+  for (const [lat, lng] of coords) {
+    const lat5 = Math.round(lat * factor), lng5 = Math.round(lng * factor);
+    out += encodeNum(lat5 - prevLat) + encodeNum(lng5 - prevLng);
+    prevLat = lat5; prevLng = lng5;
+  }
+  return out;
 }
 
-async function getTolls(geometry, c1, c2) {
-  // ORS renvoie une polyline encodée (précision 5, compatible Google).
-  const polyline = (typeof geometry === 'string') ? geometry : null;
-  if (!polyline) return null;
-  if (!TOLL_PROXY_URL) return null;
+// Péages : calcul via l'API Vinci-autoroutes uniquement.
+async function getTolls(route, c1, c2) {
+  const polyline = route && typeof route.polyline === 'string' ? route.polyline : null;
+  if (!polyline || !TOLL_PROXY_URL) return null;
 
-  // 1) Cache : si ce trajet a déjà été calculé, on réutilise (économise le quota).
+  // Cache : si ce trajet a déjà été calculé, on réutilise.
   const cacheKey = (c1 && c2) ? tollCacheKey(c1, c2) : null;
   if (cacheKey) {
     const cached = tollCacheGet(cacheKey);
     if (typeof cached === 'number') return cached;
   }
 
-  try {
-    // c1/c2 sont des coordonnées [lng, lat] (format ORS/GeoJSON).
-    const from = c1 ? { lat: c1[1], lng: c1[0] } : null;
-    const to   = c2 ? { lat: c2[1], lng: c2[0] } : null;
-    const r = await fetch(TOLL_PROXY_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ polyline: polyline, from: from, to: to, vehicleType: '2AxlesAuto' })
-    });
-    const d = await r.json();
-    // Le Worker renvoie un coût normalisé { cost: <nombre|null> }.
-    let cost = null;
-    if (typeof d.cost === 'number') {
-      cost = d.cost;
-    } else if (d.cost === undefined) {
-      // Compat : ancienne forme (réponse brute TollGuru).
-      if (d.route && d.route.hasTolls === false) cost = 0;
-      else {
-        const costs = (d.route && d.route.costs)
-          || (d.routes && d.routes[0] && d.routes[0].costs)
-          || d.costs;
-        cost = extractToll(costs);
-      }
-    }
-    // On ne met en cache qu'un coût valide (jamais un échec/N/A).
-    if (cacheKey && typeof cost === 'number') tollCacheSet(cacheKey, cost);
-    // Un coût obtenu par appel réseau = 1 transaction TollGuru consommée.
-    if (typeof cost === 'number') recordTollCall();
-    return cost;
-  } catch(e) {
-    return null;
-  }
+  const cost = await getTollsVinci(route);
+
+  // On ne met en cache qu'un coût valide (jamais un échec/N/A).
+  if (cacheKey && typeof cost === 'number') tollCacheSet(cacheKey, cost);
+  return cost;
 }
 
-function extractToll(costs) {
-  if (!costs || typeof costs !== 'object') return null;
-  // On parcourt les champs de coût possibles, du plus pertinent au plus générique.
-  const candidats = [
-    costs.tag, costs.cash, costs.creditCard, costs.licensePlate,
-    costs.minimumTollCost, costs.maximumTollCost, costs.prepaidCard, costs.EUR
-  ];
-  for (const c of candidats) {
-    const n = parseFloat(c);
-    if (c !== undefined && c !== null && !isNaN(n)) return n;
+// Via l'API interne (non documentée) de Vinci-autoroutes : reproduit
+// la chaîne "tracé -> gares de péage traversées -> tarif" observée sur leur
+// site. Best-effort : le moindre souci (API qui change, réseau...) renvoie
+// simplement null, sans bloquer le reste du calcul.
+async function getTollsVinci(route) {
+  if (!TOLL_PROXY_URL) return null;
+  const polyline5 = route && route.polyline;
+  if (typeof polyline5 !== 'string') return null;
+  try {
+    const polyline6 = encodePolyline(decodePolyline(polyline5, 5), 6);
+
+    const legsResp = await fetch(TOLL_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'vinci-legs', polyline: polyline6 })
+    });
+    if (!legsResp.ok) return null;
+    const legs = await legsResp.json();
+    if (!Array.isArray(legs) || legs.length < 2) return null;
+
+    const gates = legs
+      .map(l => l && l.Placemark && l.Placemark.Tags && l.Placemark.Tags.ID_PEAGE)
+      .filter(code => typeof code === 'string' && code.length > 2);
+    if (gates.length < 2) return null;
+
+    // Dates de passage estimées (entrée = maintenant, sortie = maintenant +
+    // durée du trajet) : on n'a pas reproduit le calcul exact d'Vinci reliant
+    // l'abscisse le long du tracé à une heure de passage.
+    const now = Date.now();
+    const durationMs = (route.dureeSec || 0) * 1000;
+    const tollPassages = gates.map((code, i) => ({
+      toll: { operatorId: code.slice(0, 2), tollId: code.slice(2) },
+      passageDate: new Date(i === 0 ? now : now + durationMs).toISOString(),
+    }));
+
+    const rateResp = await fetch(TOLL_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'vinci-rate', vehicleCategory: 1, paymentOption: 2, tollPassages })
+    });
+    if (!rateResp.ok) return null;
+    const rateData = await rateResp.json();
+    if (Array.isArray(rateData) && rateData[0] && typeof rateData[0].price === 'number') {
+      return rateData[0].price;
+    }
+    return null;
+  } catch (e) {
+    return null;
   }
-  return null;
 }
 
 function formatDuree(sec) {
@@ -2256,7 +2543,7 @@ function formatDuree(sec) {
 
 function fmtKm(n)  { return Math.round(n).toLocaleString('fr-FR') + ' km'; }
 function fmtEur(n) { return n.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €'; }
-function fmtL(n)   { return n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' L'; }
+function fmtL(n, unit)   { return n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' ' + (unit || 'L'); }
 
 // --- Bascule Aller simple / Aller-retour dans le tableau de résultats ---
 let resultMode = 'simple'; // 'simple' | 'ar'
@@ -2273,14 +2560,35 @@ function renderResultMode() {
   const isAR = resultMode === 'ar';
   document.getElementById('r-dist').textContent   = fmtKm(isAR ? d.distA * 2 : d.distA);
   document.getElementById('r-duree').textContent  = formatDuree(isAR ? d.dureeSec * 2 : d.dureeSec);
-  document.getElementById('r-litres').textContent = fmtL(isAR ? d.litresA * 2 : d.litresA);
+  document.getElementById('r-litres').textContent = fmtL(isAR ? d.litresA * 2 : d.litresA, d.unit);
+  document.getElementById('r-litres-label').textContent = d.unit === 'kWh' ? 'Électricité consommée' : 'Litres consommés';
 
-  // Coût carburant : seule valeur qui garde un rappel de l'autre mode
-  // (c'est la donnée jugée pertinente à comparer aller vs aller-retour).
-  const coutAffiche = isAR ? d.coutA * 2 : d.coutA;
+  // Détail carburant/péages en petit, coût total (carburant + péages) en
+  // gros. Les péages sont estimés via l'API Vinci ; s'ils sont indisponibles,
+  // le total ne compte que le carburant et on renvoie vers le lien Vinci.
+  const coutCarburantAffiche = isAR ? d.coutA * 2 : d.coutA;
+  const peageConnu = typeof d.coutPeage === 'number';
+  const coutPeageAffiche = peageConnu ? (isAR ? d.coutPeage * 2 : d.coutPeage) : null;
+  const coutTotalAffiche = coutCarburantAffiche + (coutPeageAffiche || 0);
+
+  document.getElementById('r-cout-carburant').textContent = fmtEur(coutCarburantAffiche);
+  const peageChip = document.getElementById('costChipPeage');
+  const peageValEl = document.getElementById('r-cout-peage');
+  peageChip.classList.toggle('unavailable', !peageConnu);
+  peageValEl.textContent = '';
+  if (peageConnu) {
+    peageValEl.appendChild(document.createTextNode(fmtEur(coutPeageAffiche)));
+  } else if (d.vinciUrl) {
+    const lien = document.createElement('a');
+    lien.href = d.vinciUrl;
+    lien.target = '_blank';
+    lien.textContent = 'Voir le prix des péages';
+    peageValEl.appendChild(lien);
+  } else {
+    peageValEl.appendChild(document.createTextNode('Voir le prix des péages ci-dessous'));
+  }
   const rCout = document.getElementById('r-cout');
-  rCout.textContent = fmtEur(coutAffiche);
-  rCout.classList.toggle('has-per-person', d.passagers === 0 || d.passagers > 1);
+  rCout.textContent = fmtEur(coutTotalAffiche);
   if (d.passagers === 0) {
     const note = document.createElement('div');
     note.className = 'per-person-note';
@@ -2289,7 +2597,7 @@ function renderResultMode() {
   } else if (d.passagers > 1) {
     const note = document.createElement('div');
     note.className = 'per-person-note';
-    note.textContent = fmtEur(coutAffiche / d.passagers) + ' / pers.';
+    note.textContent = fmtEur(coutTotalAffiche / d.passagers) + ' / pers.';
     rCout.appendChild(note);
   }
 }
@@ -2321,8 +2629,23 @@ async function calculer() {
     const litresA = (distA * conso) / 100;
     const coutA   = litresA * prixActuel;
     const passagers = passagersValeur();
+    const unit = document.getElementById('carburant').value === 'electrique' ? 'kWh' : 'L';
+    // Péages (best-effort, API Vinci) : n'importe quel échec laisse
+    // simplement le total au seul carburant.
+    const coutPeage = await getTolls(route, c1, c2);
 
-    lastResultData = { distA, dureeSec: route.dureeSec, litresA, coutA, passagers };
+    // Lien Vinci calculé avant l'affichage des résultats : la pastille
+    // péages s'en sert comme lien de secours quand le calcul est indisponible.
+    // Le calculateur de péages Vinci ne gère qu'un trajet direct départ→arrivée :
+    // pas de lien dès qu'il y a au moins une étape intermédiaire.
+    let vinciUrl = null;
+    if (lieux.length <= 2) {
+      const startObj = JSON.stringify({place: depart, lat: c1[1], lng: c1[0]});
+      const endObj = JSON.stringify({place: arrivee, lat: c2[1], lng: c2[0]});
+      vinciUrl = `https://www.vinci-autoroutes.com/fr/mon-trajet/?area=service&filter-status=0&start=${encodeURIComponent(startObj)}&end=${encodeURIComponent(endObj)}`;
+    }
+
+    lastResultData = { distA, dureeSec: route.dureeSec, litresA, coutA, coutPeage, vinciUrl, passagers, unit };
     renderResultMode();
 
     // Itinéraire Maps : force le mode voiture (travelmode=driving) + étapes.
@@ -2332,17 +2655,15 @@ async function calculer() {
     let mapsUrl = `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${origin}&destination=${destination}`;
     if (waypoints) mapsUrl += `&waypoints=${waypoints}`;
     document.getElementById('mapsLink').href = mapsUrl;
-    const startObj = JSON.stringify({place: depart, lat: c1[1], lng: c1[0]});
-    const endObj = JSON.stringify({place: arrivee, lat: c2[1], lng: c2[0]});
+    // Waze navigue toujours depuis la position GPS actuelle de l'appareil (il
+    // n'accepte pas de point de départ personnalisé) : seule la destination compte.
+    document.getElementById('wazeLink').href = `https://waze.com/ul?ll=${c2[1]},${c2[0]}&navigate=yes`;
     const vinciLink = document.getElementById('vinciLink');
-    // Le calculateur de péages Vinci ne gère qu'un trajet direct départ→arrivée :
-    // on masque le bouton dès qu'il y a au moins une étape intermédiaire.
-    if (lieux.length > 2) {
+    if (!vinciUrl) {
       vinciLink.style.display = 'none';
     } else {
       vinciLink.style.display = '';
-      vinciLink.href =
-        `https://www.vinci-autoroutes.com/fr/mon-trajet/?area=service&filter-status=0&start=${encodeURIComponent(startObj)}&end=${encodeURIComponent(endObj)}`;
+      vinciLink.href = vinciUrl;
     }
 
     // Station la moins chère à proximité du départ (best-effort, ne bloque rien).
@@ -2363,3 +2684,5 @@ document.addEventListener('keydown', e => { if (e.key === 'Enter') calculer(); }
 </script>
 </body>
 </html>
+
+
